@@ -2,9 +2,9 @@
 
 // set the version
 const ccVersion = 0.1;
-const ccCode = "dank alpha";
+const ccCode = "🡼dank.alpha";
 //and apply it
-document.getElementById("versionDivID").innerText = `v${ccVersion} ${ccCode}`;
+document.getElementById("versionDivID").innerText = `v${ccVersion}${ccCode}`;
 
 // this object contains a lot of global values
 let global = {
@@ -36,6 +36,57 @@ const common = {
   normaliseData(data) {
     return Array.isArray(data) ? data : [data];
   },
+  /**
+   *  returns the css required to make a progress bar
+   * @param {number} progress this is supplied as a 0-1
+   * @param {color} blankColor will default to black
+   * @param {color} fillColor will default to white
+   */
+  cssProgressBar(progress, blankColor, fillColor) {
+    progress *= 100;
+    blankColor = blankColor || "black";
+    fillColor = fillColor || "white";
+    let css = "";
+    css += `linear-gradient(90deg, ${fillColor} 0%,${fillColor} ${progress}%,${blankColor} ${progress}%,${blankColor} 100%)`;
+    return css;
+  },
+  formatTime(timeInMS) {
+    if (timeInMS == false) {
+      return "";
+    }
+    let formattedTime = "";
+    let timeUntilComplete = 0;
+    timeUntilComplete = dayjs.duration(dayjs(timeInMS), "millisecond");
+    timeUntilComplete.years = timeUntilComplete.format("YY");
+
+    timeUntilComplete.months = timeUntilComplete.format("M");
+    timeUntilComplete.days = timeUntilComplete.format("D");
+    timeUntilComplete.hours = timeUntilComplete.format("H");
+    timeUntilComplete.minutes = timeUntilComplete.format("mm");
+    timeUntilComplete.seconds = timeUntilComplete.format("ss");
+    timeUntilComplete.milliseconds = timeUntilComplete.format("SSS");
+
+    if (timeUntilComplete.years > 0) {
+      formattedTime += timeUntilComplete.years + "y "; // + timeUntilComplete.months + "mo ";
+    }
+
+    if (timeUntilComplete.months > 0) {
+      formattedTime += timeUntilComplete.months + "mo ";
+    }
+
+    if (timeUntilComplete.days > 0) {
+      formattedTime += timeUntilComplete.days + "d " + timeUntilComplete.hours + "h " + timeUntilComplete.minutes + "m ";
+    } else if (timeUntilComplete.hours > 0) {
+      formattedTime += timeUntilComplete.hours + "h " + timeUntilComplete.minutes + "m ";
+    } else if (timeUntilComplete.minutes > 0) {
+      formattedTime += timeUntilComplete.minutes + "m ";
+    }
+    formattedTime += timeUntilComplete.seconds + "s";
+    if (timeInMS < 10000) {
+      formattedTime += " " + timeUntilComplete.milliseconds + "ms";
+    }
+    return formattedTime;
+  },
 };
 
 // init
@@ -47,7 +98,7 @@ let elementGroupArray = [];
 // fill the array
 for (let index = 0; index < modularContentData.length; index++) {
   // make a new object and assign into the array
-  elementGroupArray[index] = new modularGenericElementGround(index);
+  elementGroupArray[index] = new modularGenericElementGroup(index);
   // pass object into the builder
   modularBuilder.buildElementGroup(elementGroupArray[index]);
 }

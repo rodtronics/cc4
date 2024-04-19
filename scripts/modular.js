@@ -30,43 +30,109 @@ const modularBuilder = {
     let columns = 2;
     let rows = 4;
     let containerElement = null;
-    switch (type) {
-      case "basic crime":
-        elementGroupObject.elements.container = this.createDiv();
-        elementGroupObject.elements.container.classList.add("elementGroup", "elementGroupContainer");
+    // these sections are common to all
+    // make the container
+    elementGroupObject.elements.container = this.createDiv();
+    containerElement = elementGroupObject.elements.container;
+    elementGroupObject.elements.container.classList.add("elementGroupContainer");
+    // make the header and attach
+    elementGroupObject.elements.header = this.createDiv();
+    elementGroupObject.elements.header.classList.add("elementGroupHeader");
+    elementGroupObject.elements.header.innerText = modularContentData[index].displayName;
+    containerElement.appendChild(elementGroupObject.elements.header);
 
-        elementGroupObject.elements.header = this.createDiv();
-        elementGroupObject.elements.header.classList.add("elementGroup", "elementGroupHeader");
-        elementGroupObject.elements.header.innerText = modularContentData[index].displayName;
-        elementGroupObject.elements.container.appendChild(elementGroupObject.elements.header);
+    elementGroupObject.elements.header.addEventListener("click", () => elementGroupObject.go());
+    //
+    switch (type) {
+      case "crime":
+        // progress bar
+        elementGroupObject.elements.progressBar = this.createProgressBar();
+        containerElement.appendChild(elementGroupObject.elements.progressBar);
+        elementGroupObject.elements.progressText = this.createDiv();
+        // progess text
+        elementGroupObject.elements.progressText.classList.add("elementGroupProgressText");
+        containerElement.appendChild(elementGroupObject.elements.progressText);
     }
   },
 
   createDiv() {
     const newDiv = document.createElement("div");
+    newDiv.classList.add("elementGroup");
+    return newDiv;
+  },
+  createProgressBar() {
+    const newDiv = this.createDiv();
+    newDiv.classList.add("elementGroupProgressBar");
     return newDiv;
   },
 };
 //
 // this is the generic object that all widgets will have
 // this may be extended by mixins
-class modularGenericElementGround {
+class modularGenericElementGroup {
   /**
    * this is the base of any widget
    * @param {*} index
-   * @param {*} state basically an enum - virgin, running, paused, finished, waitingReward
+   * @param {*} state basically an enum - virgin, running, paused, finished, waitingReward,cooldown
    * @param {boolean} locked means it can't be used. different from visible
    * @param {boolean} visible means if the element group is displayed at all
+   * @param {number} progress this counts up to the base seconds to complete whatever, makes it easy
    */
   constructor(index) {
     this.index = index;
     this.moduleID = modularContentData[index].moduleID;
-    this.numCommitters = 0;
-    this.state = "virgin";
-    this.locked = true;
+    this.data = {};
+    this.data.numCommitters = 0;
+    this.data.state = "virgin";
+    this.data.locked = true;
+    this.data.visible = true;
+    this.data.progress = 0;
     this.elements = {};
     this.elements.container = null;
     this.elements.header = null;
+    this.elements.progressBar = null;
+    this.elements.progressText = null;
+    this.timerFunction = null;
+  }
+  go() {
+    this.data.numCommitters += 1;
+    if (!this.timerFunction) {
+      this.data.state = "running";
+      this.timerFunction = setInterval(() => this.running(), global.refreshRate);
+    }
+  }
+  running() {
+    this.data.progress += global.refreshRate * this.data.numCommitters;
+    this.updateProgressBar();
+    this.updateProgressText();
+    if (this.data.progress > modularContentData[this.index].durationMS) {
+      this.completed();
+    }
+  }
+  updateProgressBar() {
+    const progress = this.data.progress / modularContentData[this.index].durationMS;
+    const css = common.cssProgressBar(progress);
+    this.elements.progressBar.style.background = css;
+  }
+  updateProgressText(text) {
+    this.elements.progressText.innerText = text || this.msLeft(true);
+  }
+  completed() {
+    this.data.progress = 0;
+  }
+  /**
+   * returns the milliseconds left until complete
+   * if format is true then it'll return a formatted string,
+   * else just a number
+   * @param {boolean} format if true returns formatted string
+   * @returns depends
+   */
+  msLeft(format) {
+    const msLeft = (modularContentData[this.index].durationMS - this.data.progress) / this.data.numCommitters;
+    if (format == true) {
+      return common.formatTime(msLeft);
+    }
+    return msLeft;
   }
 }
 

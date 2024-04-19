@@ -1,10 +1,12 @@
 //
+// interesting noto symbols 💰🡼🞿🞺🞴🞧☠🮲🮳
 // used to drive the creation of each widget
 
 const modularContentData = [
   {
     // this one is a bit of a prototype, showing all properties even if not used in this one
-    type: "basic crime",
+    type: "crime",
+    subType: undefined,
     displayName: "stealing candy from a baby",
     moduleID: "crime_stealcandy", // must be unique
     description: "it's just another reminder that even the smallest opponents can leave you feeling like a total loser",
@@ -20,6 +22,11 @@ const modularContentData = [
     coolDownMS: 0, // how long to wait before can be done again
     maxCriminals: 0, // if 0 or undefined, it's unlimited
     automatable: true, // can it just repeat itself over and over
+  },
+  {
+    type: "crime",
+    displayName: "such a long crime",
+    durationMS: 41556952000,
   },
 ];
 

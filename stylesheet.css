@@ -5,8 +5,12 @@
   font-family: "Michroma", sans-serif;
   font-family: "Bebas Neue", sans-serif;
   font-family: "Noto Sans Symbols 2", sans-serif;
-  font-family: "Source Code Pro", monospace;
   font-family: "Sometype Mono", monospace;
+  font-family: "Michroma", sans-serif;
+  font-family: "Azeret Mono", monospace;
+  font-optical-sizing: auto;
+
+  user-select: none;
 }
 
 @font-face {
@@ -33,6 +37,10 @@
   font-style: normal;
 }
 
+notoSymbol {
+  font-family: "Noto Sans Symbols 2", sans-serif;
+}
+
 #headerDivID {
   display: grid;
   grid-template-columns: 2fr 1fr;
@@ -40,24 +48,28 @@
   border-style: solid;
   border-color: white;
   height: 50px;
-  text-shadow: 0 0 8px rgba(0, 162, 255, 0.5);
+  text-shadow: 0 0 8px rgba(0, 162, 255, 0.3);
 }
 
 #titleDivID {
   font-family: "Michroma", sans-serif;
+  font-weight: 700;
   grid-column: 1;
   font-size: 3em;
-  letter-spacing: -0.1em;
+  letter-spacing: -0.05em;
   position: relative;
   top: -20px;
 }
 #versionDivID {
   position: relative;
   text-align: right;
+  /* font-family: "Sometype Mono", monospace; */
 }
 
 #bodyDivID {
-  display: grid;
+  display: flex;
+  background: repeating-linear-gradient(-45deg, rgb(69, 31, 31) 0px, rgb(70, 27, 27) 20px, black 20px, black 40px);
+  min-height: 80vh;
 }
 
 .elementGroup {
@@ -70,22 +82,61 @@
   height: 300px;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 0.4fr 0.5fr 0.4fr 1fr 1fr;
+  box-shadow: 5px 5px rgba(0, 0, 0, 0.5);
 }
 .elementGroupHeader {
+  height: 40px;
   border-style: solid;
   border-width: 4px;
   border-color: white;
-  padding: 5px 15px;
+  padding: 5px 10px;
   font-family: "Michroma", sans-serif;
+  font-weight: 700;
   text-align: right;
   font-size: 1.2em;
-  letter-spacing: -0.05em;
-
+  letter-spacing: -0.03em;
+  line-height: 1em;
   grid-column: 1 / span 2;
+  text-align: right;
+  font-family: "Azeret Mono", monospace;
 }
 .elementGroupHeader:hover {
   background: rgba(0, 68, 255, 1);
   background: linear-gradient(-20deg, rgba(0, 68, 255, 1) 0%, rgb(0, 166, 255) 100%);
   color: white;
+}
+.elementGroupProgressBar {
+  border-style: solid;
+  border-width: 0 4px 4px 4px;
+  border-color: white;
+  grid-row: 2;
+  grid-column: 1 / span 2;
+  color: hsl(0, 0%, 50%);
+}
+.elementGroupProgressText {
+  height: 20px;
+  padding: 0 15px;
+  grid-row: 3;
+  grid-column: 1 / span 2;
+  font-weight: 700;
+  text-align: right;
+  color: hsl(0, 0%, 50%);
+  color: rgb(40, 40, 40);
+  font-weight: 400;
+}
+
+#modalOuterID {
+  display: none;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 120vh;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(20px) sepia(70%);
+}
+
+#modalContainerID {
+  margin: 50px;
 }
