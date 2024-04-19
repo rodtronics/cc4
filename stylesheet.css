@@ -1,6 +1,7 @@
 :root {
   background: black;
   color: white;
+  --color-A: rgb(0, 76, 255);
 
   font-family: "Michroma", sans-serif;
   font-family: "Bebas Neue", sans-serif;
@@ -41,6 +42,14 @@ notoSymbol {
   font-family: "Noto Sans Symbols 2", sans-serif;
 }
 
+h1 {
+  font-family: "Michroma", sans-serif;
+  text-align: right;
+  font-size: 2em;
+  font-weight: 900;
+  line-height: 1em;
+}
+
 #headerDivID {
   display: grid;
   grid-template-columns: 2fr 1fr;
@@ -68,7 +77,7 @@ notoSymbol {
 
 #bodyDivID {
   display: flex;
-  background: repeating-linear-gradient(-45deg, rgb(69, 31, 31) 0px, rgb(70, 27, 27) 20px, black 20px, black 40px);
+  background: repeating-linear-gradient(-45deg, var(--color-A) 0px, var(--color-A) 20px, black 20px, black 40px);
   min-height: 80vh;
 }
 
@@ -127,16 +136,102 @@ notoSymbol {
 }
 
 #modalOuterID {
+  z-index: 20;
   display: none;
   position: fixed;
   left: 0;
   top: 0;
   width: 100vw;
-  height: 120vh;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(20px) sepia(70%);
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  background: linear-gradient(to bottom, #c6ffdd, #fbd786, #f7797d);
+  background-image: repeating-linear-gradient(135deg, rgb(0, 0, 0) 0px, rgb(0, 0, 0) 10px, transparent 10px, transparent 11px),
+    repeating-linear-gradient(22.5deg, rgb(0, 0, 0) 0px, rgb(0, 0, 0) 10px, transparent 10px, transparent 11px),
+    linear-gradient(90deg, hsl(194, 74%, 56%), hsl(266, 74%, 56%), hsl(338, 74%, 56%), hsl(50, 74%, 56%), hsl(122, 74%, 56%));
+  /* backdrop-filter: blur(20px); */
+  background-image: linear-gradient(
+      45deg,
+      rgb(240, 92, 24) 0%,
+      rgb(240, 92, 24) 18%,
+      rgb(239, 116, 49) 18%,
+      rgb(239, 116, 49) 33%,
+      rgb(238, 140, 73) 33%,
+      rgb(238, 140, 73) 38%,
+      rgb(237, 165, 98) 38%,
+      rgb(237, 165, 98) 53%,
+      rgb(235, 189, 122) 53%,
+      rgb(235, 189, 122) 56%,
+      rgb(234, 213, 147) 56%,
+      rgb(234, 213, 147) 83%,
+      rgb(233, 237, 171) 83%,
+      rgb(233, 237, 171) 100%
+    ),
+    linear-gradient(
+      0deg,
+      rgb(240, 92, 24) 0%,
+      rgb(240, 92, 24) 18%,
+      rgb(239, 116, 49) 18%,
+      rgb(239, 116, 49) 33%,
+      rgb(238, 140, 73) 33%,
+      rgb(238, 140, 73) 38%,
+      rgb(237, 165, 98) 38%,
+      rgb(237, 165, 98) 53%,
+      rgb(235, 189, 122) 53%,
+      rgb(235, 189, 122) 56%,
+      rgb(234, 213, 147) 56%,
+      rgb(234, 213, 147) 83%,
+      rgb(233, 237, 171) 83%,
+      rgb(233, 237, 171) 100%
+    ),
+    linear-gradient(
+      67.5deg,
+      rgb(240, 92, 24) 0%,
+      rgb(240, 92, 24) 18%,
+      rgb(239, 116, 49) 18%,
+      rgb(239, 116, 49) 33%,
+      rgb(238, 140, 73) 33%,
+      rgb(238, 140, 73) 38%,
+      rgb(237, 165, 98) 38%,
+      rgb(237, 165, 98) 53%,
+      rgb(235, 189, 122) 53%,
+      rgb(235, 189, 122) 56%,
+      rgb(234, 213, 147) 56%,
+      rgb(234, 213, 147) 83%,
+      rgb(233, 237, 171) 83%,
+      rgb(233, 237, 171) 100%
+    ),
+    linear-gradient(
+      22.5deg,
+      rgb(240, 92, 24) 0%,
+      rgb(240, 92, 24) 18%,
+      rgb(239, 116, 49) 18%,
+      rgb(239, 116, 49) 33%,
+      rgb(238, 140, 73) 33%,
+      rgb(238, 140, 73) 38%,
+      rgb(237, 165, 98) 38%,
+      rgb(237, 165, 98) 53%,
+      rgb(235, 189, 122) 53%,
+      rgb(235, 189, 122) 56%,
+      rgb(234, 213, 147) 56%,
+      rgb(234, 213, 147) 83%,
+      rgb(233, 237, 171) 83%,
+      rgb(233, 237, 171) 100%
+    ),
+    linear-gradient(90deg, rgb(243, 116, 163), rgb(252, 182, 229));
+  background-blend-mode: overlay, overlay, overlay, overlay, normal;
 }
 
 #modalContainerID {
-  margin: 50px;
+  /* line-height: 0.9em; */
+  margin: 100px 100px;
+  background: rgba(0, 0, 0, 0);
+  backdrop-filter: blur(20px);
+  font-size: 2em;
+  padding: 0 60px;
+  height: 76%;
+  border-style: solid;
+  border-color: black;
+  border-width: 10px;
+  color: black;
+  border-radius: 5%;
 }

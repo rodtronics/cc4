@@ -41,8 +41,9 @@ const modularBuilder = {
     elementGroupObject.elements.header.innerText = modularContentData[index].displayName;
     containerElement.appendChild(elementGroupObject.elements.header);
 
-    elementGroupObject.elements.header.addEventListener("click", () => elementGroupObject.go());
-    //
+    // elementGroupObject.elements.header.addEventListener("click", () => elementGroupObject.go());
+    elementGroupObject.elements.header.addEventListener("click", () => modal.showModal(index));
+
     switch (type) {
       case "crime":
         // progress bar
