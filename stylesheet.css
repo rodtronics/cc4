@@ -1,0 +1,56 @@
+:root {
+  background: black;
+  color: white;
+
+  font-family: "Michroma", sans-serif;
+  font-family: "Bebas Neue", sans-serif;
+  font-family: "Noto Sans Symbols 2", sans-serif;
+  font-family: "Source Code Pro", monospace;
+  font-family: "Sometype Mono", monospace;
+}
+
+@font-face {
+  font-family: "d-dinregular";
+  src: url("file:C:/Users/Andrew/Documents/GitHub/cc4/fonts/d-din-webfont.woff2") format("woff2"),
+    url("file:C:/Users/Andrew/Documents/GitHub/cc4/fonts/d-din-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "d-dindin-bold";
+  src: url("file:C:/Users/Andrew/Documents/GitHub/cc4/fonts/d-din-bold-webfont.woff2") format("woff2"),
+    url("file:C:/Users/Andrew/Documents/GitHub/cc4/fonts/d-din-bold-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "d-din_condenseddinCnBd";
+  src: url("file:C:/Users/Andrew/Documents/GitHub/cc4/fonts/d-dincondensed-bold-webfont.woff2") format("woff2"),
+    url("file:C:/Users/Andrew/Documents/GitHub/cc4/fonts/d-dincondensed-bold-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+#headerDivID {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  border-width: 0 0 5px 0;
+  border-style: solid;
+  border-color: white;
+  height: 50px;
+  text-shadow: 0 0 8px rgba(0, 162, 255, 0.5);
+}
+#titleDivID {
+  font-family: "Michroma", sans-serif;
+  grid-column: 1;
+  font-size: 3em;
+  letter-spacing: -0.1em;
+  position: relative;
+  top: -20px;
+}
+#versionDivID {
+  position: relative;
+  text-align: right;
+}
