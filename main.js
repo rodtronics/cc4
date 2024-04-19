@@ -10,6 +10,7 @@ document.getElementById("versionDivID").innerText = `v${ccVersion} ${ccCode}`;
 let global = {
   refreshRate: 61.8 / 2, //phi divided by 2, means values accumulate in an unrepeating fashion
   precision: 4, // precision on floats
+  bodyDiv: document.getElementById("bodyDivID"),
 };
 
 const common = {
@@ -36,3 +37,21 @@ const common = {
     return Array.isArray(data) ? data : [data];
   },
 };
+
+// init
+
+//
+//
+// init the array of widgets
+let elementGroupArray = [];
+// fill the array
+for (let index = 0; index < modularContentData.length; index++) {
+  // make a new object and assign into the array
+  elementGroupArray[index] = new modularGenericElementGround(index);
+  // pass object into the builder
+  modularBuilder.buildElementGroup(elementGroupArray[index]);
+}
+
+for (let index = 0; index < elementGroupArray.length; index++) {
+  global.bodyDiv.appendChild(elementGroupArray[index].elements.container);
+}

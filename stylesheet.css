@@ -42,6 +42,7 @@
   height: 50px;
   text-shadow: 0 0 8px rgba(0, 162, 255, 0.5);
 }
+
 #titleDivID {
   font-family: "Michroma", sans-serif;
   grid-column: 1;
@@ -53,4 +54,38 @@
 #versionDivID {
   position: relative;
   text-align: right;
+}
+
+#bodyDivID {
+  display: grid;
+}
+
+.elementGroup {
+  color: black;
+  background: white;
+}
+.elementGroupContainer {
+  margin: 10px;
+  width: 300px;
+  height: 300px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+}
+.elementGroupHeader {
+  border-style: solid;
+  border-width: 4px;
+  border-color: white;
+  padding: 5px 15px;
+  font-family: "Michroma", sans-serif;
+  text-align: right;
+  font-size: 1.2em;
+  letter-spacing: -0.05em;
+
+  grid-column: 1 / span 2;
+}
+.elementGroupHeader:hover {
+  background: rgba(0, 68, 255, 1);
+  background: linear-gradient(-20deg, rgba(0, 68, 255, 1) 0%, rgb(0, 166, 255) 100%);
+  color: white;
 }

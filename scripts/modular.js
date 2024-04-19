@@ -23,25 +23,34 @@ stay consistent with namings
 
 const modularBuilder = {
   // this is the main called function
-  buildElementGroup(widgetObject) {
-    let type = widgetObject.type;
+  buildElementGroup(elementGroupObject) {
+    let index = elementGroupObject.index;
+    let type = modularContentData[index].type;
+
     let columns = 2;
     let rows = 4;
+    let containerElement = null;
     switch (type) {
       case "basic crime":
+        elementGroupObject.elements.container = this.createDiv();
+        elementGroupObject.elements.container.classList.add("elementGroup", "elementGroupContainer");
+
+        elementGroupObject.elements.header = this.createDiv();
+        elementGroupObject.elements.header.classList.add("elementGroup", "elementGroupHeader");
+        elementGroupObject.elements.header.innerText = modularContentData[index].displayName;
+        elementGroupObject.elements.container.appendChild(elementGroupObject.elements.header);
     }
   },
-  // this function takes the data from a key/data pair,
-  // and returns it as an array regardless of if it is
-  // or not
+
   createDiv() {
-    return document.createElement("div");
+    const newDiv = document.createElement("div");
+    return newDiv;
   },
 };
 //
 // this is the generic object that all widgets will have
 // this may be extended by mixins
-class modularGenericWidget {
+class modularGenericElementGround {
   /**
    * this is the base of any widget
    * @param {*} index
@@ -55,18 +64,10 @@ class modularGenericWidget {
     this.numCommitters = 0;
     this.state = "virgin";
     this.locked = true;
+    this.elements = {};
+    this.elements.container = null;
+    this.elements.header = null;
   }
-}
-//
-//
-// init the array of widgets
-let widgetArray = [];
-// fill the array
-for (let index = 0; index < modularContentData.length; index++) {
-  // make a new object and assign into the array
-  widgetArray[index] = new modularGenericWidget(index);
-  // pass object into the builder
-  modularBuilder.buildElementGroup(widgetArray[index]);
 }
 
 class playerDataClass {
