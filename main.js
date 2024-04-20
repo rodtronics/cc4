@@ -2,7 +2,7 @@
 
 // set the version
 const ccVersion = 0.1;
-const ccCode = "<notoSymbol>🡼</notoSymbol>dank.alpha";
+const ccCode = "<notoSymbol>🢅</notoSymbol>dank.alpha";
 //and apply it
 document.getElementById("versionDivID").innerHTML = `v${ccVersion}${ccCode}`;
 
