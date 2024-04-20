@@ -91,7 +91,7 @@ h1 {
   width: 300px;
   height: 300px;
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-columns: 1fr 1.5fr 1fr;
   grid-template-rows: 0.4fr 0.5fr 0.8fr 0.4fr 1fr;
   box-shadow: 5px 5px rgba(0, 0, 0, 1), -5px -5px rgba(255, 255, 255, 1);
   box-shadow: 5px 5px rgba(0, 0, 0, 1);
@@ -152,7 +152,8 @@ h1 {
   border-style: solid;
   border-width: 4px;
   border-color: white;
-  border-radius: 5px;
+  border-radius: 20px;
+  text
 }
 .elementGroupAddSub[data-state="active"] {
   color: black;

@@ -2,9 +2,9 @@
 
 // set the version
 const ccVersion = 0.1;
-const ccCode = "🡼dank.alpha";
+const ccCode = "<notoSymbol>🡼</notoSymbol>dank.alpha";
 //and apply it
-document.getElementById("versionDivID").innerText = `v${ccVersion}${ccCode}`;
+document.getElementById("versionDivID").innerHTML = `v${ccVersion}${ccCode}`;
 
 // this object contains a lot of global values
 let global = {
