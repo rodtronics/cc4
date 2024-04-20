@@ -87,6 +87,23 @@ const common = {
     }
     return formattedTime;
   },
+  /**
+   * takes two values and returns a random value in between
+   * @param {number} lower lower value
+   * @param {number} upper upper valre
+   * @returns
+   */
+  randomFromRange(lower, upper) {
+    if (!lower || !upper) {
+      return null;
+    }
+    const min = Math.min(lower, upper);
+    const max = Math.max(lower, upper);
+    const random = Math.random();
+    const diff = Math.abs(max - min);
+    const answer = Math.round(random * diff + min);
+    return answer;
+  },
 };
 
 const modal = {

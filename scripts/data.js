@@ -22,12 +22,31 @@ const modularContentData = [
     coolDownMS: 5000, // how long to wait before can be done again
     maxCriminals: 0, // if 0 or undefined, it's unlimited
     automatable: true, // can it just repeat itself over and over
+    riskLost: 0,
+    riskCaught: 0,
   },
   {
     type: "crime",
     description: "",
     displayName: "such a long crime",
     durationMS: 41556952000,
+  },
+  {
+    type: "robbery",
+    description: "",
+    displayName: "this is different",
+    durationMS: 41556952000,
+    potentialRobberies: ["bus"],
+  },
+];
+
+const robberyData = [
+  {
+    displayName: "bus",
+    description: "you really are going to try and steal change from the bus driver aren't you",
+    yield: [{ type: "money", quantity: [0, 2] }],
+    timeRangeToShow: [10000, 30000],
+    timeRangeToStay: [30000, 60000],
   },
 ];
 

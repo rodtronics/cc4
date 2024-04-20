@@ -75,6 +75,14 @@ const modularBuilder = {
         elementGroupObject.elements.counter.innerText = elementGroupObject.data.numCommitters;
         containerElement.appendChild(elementGroupObject.elements.counter);
         elementGroupObject.elements.add.addEventListener("click", () => elementGroupObject.add());
+
+        break;
+      case "robbery":
+        elementGroupObject.elements.robberyCounter = this.createDiv();
+        elementGroupObject.elements.container.appendChild(elementGroupObject.elements.robberyCounter);
+        elementGroupObject.elements.container.style.gridTemplateColumns = "1fr";
+        Object.assign(elementGroupObject, robberyMixin);
+        elementGroupObject.init();
     }
   },
 
@@ -102,6 +110,99 @@ const modularBuilder = {
     return newDiv;
   },
 };
+/**
+ *  this will be assigned to the object
+ */
+let robberyMixin = {
+  init() {
+    this.robberies = [];
+    this.nextRobberyChoiceIndex = 0;
+    this.nextRobberyTime = 0;
+    this.assignNextRobbery();
+    this.robberyWatchTimer = null;
+    this.robberyCloseTimers = [];
+  },
+  /**
+   * this will be called to make a new robbery
+   * @param {*} index this is the index of the reference to the new robbery in the
+   * robbery array
+   */
+  newRobbery(index) {
+    localRobbery = {};
+
+    localRobbery.container = modularBuilder.createDiv();
+    localRobbery.container.classList.add("elementGroupSubContainer");
+
+    localRobbery.header = modularBuilder.createDiv();
+    localRobbery.header.classList.add("elementGroupMinorHeader");
+    localRobbery.header.innerText = "header";
+    localRobbery.header.style.gridRow = 1;
+    localRobbery.container.appendChild(localRobbery.header);
+
+    localRobbery.progressBar = modularBuilder.createProgressBar();
+    localRobbery.progressBar.classList.add("elementGroupProgressBar");
+    localRobbery.progressBar.style.gridRow = 2;
+    localRobbery.container.appendChild(localRobbery.progressBar);
+
+    localRobbery.progressText = modularBuilder.createDiv();
+    localRobbery.progressText.classList.add("elementGroupProgressText");
+    localRobbery.progressText.style.gridRow = 3;
+    localRobbery.container.appendChild(localRobbery.progressText);
+
+    return localRobbery;
+  },
+  startRobbery(index) {
+    localRobbery = this.robberies[index];
+  },
+  assignNextRobbery() {
+    const randomFloat = Math.random();
+    const arrayLength = modularContentData[this.index].potentialRobberies.length;
+    const newRobberyIndex = Math.floor(randomFloat * arrayLength);
+    this.nextRobberyChoiceIndex = newRobberyIndex;
+    const newMS = common.randomFromRange(robberyData[newRobberyIndex].timeRangeToShow[0], robberyData[newRobberyIndex].timeRangeToShow[1]);
+    this.nextRobberyTime = dayjs().add(dayjs(newMS, "millisecond"));
+    const newLiveTimeMS = common.randomFromRange(robberyData[newRobberyIndex].timeRangeToStay[0], robberyData[newRobberyIndex].timeRangeToStay[1]);
+
+    this.robberies.push(this.newRobbery());
+    this.robberies[this.robberies.length - 1].timeToClose = dayjs().add(dayjs(newLiveTimeMS, "millisecond"));
+    this.robberyWatchTimer = setInterval(() => this.watchNextRobbery(), 123);
+  },
+  watchNextRobbery() {
+    timeLeft = dayjs(this.nextRobberyTime).diff(dayjs());
+    if (timeLeft < 0) {
+      this.showNextRobbery();
+      clearInterval(this.robberyWatchTimer);
+      this.robberyWatchTimer = null;
+      this.assignNextRobbery();
+    }
+  },
+  showNextRobbery() {
+    this.elements.container.appendChild(this.robberies[this.robberies.length - 1].container);
+    this.robberyCloseTimers.push(
+      setInterval(() => this.watchCloseRobbery(this.robberies.length - 1), this.robberyCloseTimers.length - 1),
+      1000
+    );
+  },
+  watchCloseRobbery(index, selfIndex) {
+    timeLeft = dayjs(this.robberies[index].timeToClose).diff(dayjs());
+    this.robberies[this.robberies.length - 1].element.robberyCounter.innerText = common.formatTime(timeLeft);
+
+    if (timeLeft < 0) {
+      clearInterval(this.robberyCloseTimers[selfIndex]);
+      this.robberyCloseTimers[selfIndex] = null;
+      this.discardRobbery(index);
+    }
+    console.log(timeLeft);
+  },
+  discardRobbery(robberyIndex) {
+    this.robberies[robberyIndex].container.parentNode.removeChild(his.robberies(robberyIndex).container);
+    this.robberies[robberyIndex].forEach((element) => {
+      element = null;
+    });
+  },
+  robberyComplete(index) {},
+};
+
 //
 // this is the generic object that all widgets will have
 // this may be extended by mixins
@@ -176,6 +277,8 @@ class modularGenericElementGroup {
   paused() {
     this.data.state = "paused";
     this.elements.progressText.innerText = "paused";
+    const progress = this.data.progress / modularContentData[this.index].durationMS;
+    this.updateProgressBar(progress, "rgb(140,140,140)");
   }
   running() {
     this.data.progress += global.refreshRate * this.data.numCommitters;
