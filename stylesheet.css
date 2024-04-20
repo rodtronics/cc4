@@ -2,6 +2,7 @@
   background: black;
   color: white;
   --color-A: rgb(0, 76, 255);
+  --color-A: rgb(255, 255, 255);
 
   font-family: "Michroma", sans-serif;
   font-family: "Bebas Neue", sans-serif;
@@ -90,9 +91,10 @@ h1 {
   width: 300px;
   height: 300px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 0.4fr 0.5fr 0.4fr 1fr 1fr;
-  box-shadow: 5px 5px rgba(0, 0, 0, 0.5);
+  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-rows: 0.4fr 0.5fr 0.8fr 0.4fr 1fr;
+  box-shadow: 5px 5px rgba(0, 0, 0, 1), -5px -5px rgba(255, 255, 255, 1);
+  box-shadow: 5px 5px rgba(0, 0, 0, 1);
 }
 .elementGroupHeader {
   height: 40px;
@@ -106,7 +108,7 @@ h1 {
   font-size: 1.2em;
   letter-spacing: -0.03em;
   line-height: 1em;
-  grid-column: 1 / span 2;
+  grid-column: 1 / span 3;
   text-align: right;
   font-family: "Azeret Mono", monospace;
 }
@@ -120,19 +122,56 @@ h1 {
   border-width: 0 4px 4px 4px;
   border-color: white;
   grid-row: 2;
-  grid-column: 1 / span 2;
+  grid-column: 1 / span 3;
   color: hsl(0, 0%, 50%);
+  color: white;
+  padding: 5px;
+  text-align: right;
+  align-items: center;
+  justify-content: center;
 }
 .elementGroupProgressText {
   height: 20px;
   padding: 0 15px;
   grid-row: 3;
-  grid-column: 1 / span 2;
+  grid-column: 1 / span 3;
   font-weight: 700;
   text-align: right;
   color: hsl(0, 0%, 50%);
   color: rgb(40, 40, 40);
   font-weight: 400;
+}
+
+.elementGroupAddSub {
+  font-size: 3em;
+
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+
+  border-style: solid;
+  border-width: 4px;
+  border-color: white;
+  border-radius: 5px;
+}
+.elementGroupAddSub[data-state="active"] {
+  color: black;
+}
+.elementGroupAddSub[data-state="active"]:hover {
+  background: rgba(0, 68, 255, 1);
+  background: linear-gradient(-20deg, rgba(0, 68, 255, 1) 0%, rgb(0, 166, 255) 100%);
+  color: white;
+}
+.elementGroupAddSub[data-state="inactive"] {
+  color: grey;
+}
+
+.elementGroupCounter {
+  font-size: 4em;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  font-family: "Sometype Mono", monospace;
 }
 
 #modalOuterID {
@@ -224,8 +263,8 @@ h1 {
 #modalContainerID {
   /* line-height: 0.9em; */
   margin: 100px 100px;
-  background: rgba(0, 0, 0, 0);
-  backdrop-filter: blur(20px);
+  background: rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(100px);
   font-size: 2em;
   padding: 0 60px;
   height: 76%;
@@ -233,5 +272,5 @@ h1 {
   border-color: black;
   border-width: 10px;
   color: black;
-  border-radius: 5%;
+  border-radius: 10px;
 }

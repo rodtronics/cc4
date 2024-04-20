@@ -53,6 +53,28 @@ const modularBuilder = {
         // progess text
         elementGroupObject.elements.progressText.classList.add("elementGroupProgressText");
         containerElement.appendChild(elementGroupObject.elements.progressText);
+        // add sub buttons
+        elementGroupObject.elements.add = this.createAddSub("add");
+        elementGroupObject.elements.add.style.gridColumn = 3;
+        elementGroupObject.elements.add.style.gridRow = 4;
+        elementGroupObject.elements.add.setAttribute("data-state", "active");
+
+        containerElement.appendChild(elementGroupObject.elements.add);
+
+        elementGroupObject.elements.sub = this.createAddSub("sub");
+        elementGroupObject.elements.sub.style.gridColumn = 1;
+        elementGroupObject.elements.sub.style.gridRow = 4;
+        elementGroupObject.elements.sub.setAttribute("data-state", "inactive");
+        containerElement.appendChild(elementGroupObject.elements.sub);
+        elementGroupObject.elements.sub.addEventListener("click", () => elementGroupObject.sub());
+        // create counter
+        elementGroupObject.elements.counter = this.createDiv();
+        elementGroupObject.elements.counter.classList.add("elementGroupCounter");
+        elementGroupObject.elements.counter.style.gridColumn = 2;
+        elementGroupObject.elements.counter.style.gridRow = 4;
+        elementGroupObject.elements.counter.innerText = elementGroupObject.data.numCommitters;
+        containerElement.appendChild(elementGroupObject.elements.counter);
+        elementGroupObject.elements.add.addEventListener("click", () => elementGroupObject.add());
     }
   },
 
@@ -64,6 +86,19 @@ const modularBuilder = {
   createProgressBar() {
     const newDiv = this.createDiv();
     newDiv.classList.add("elementGroupProgressBar");
+    return newDiv;
+  },
+  /**
+   *
+   * @param {*} polarity this value is stored in the data-polarity
+   *  attribute in the element
+   */
+  createAddSub(polarity) {
+    const newDiv = this.createDiv();
+    newDiv.classList.add("elementGroupAddSub");
+    newDiv.setAttribute("data-polarity", polarity);
+    const innerHTML = polarity == "add" ? "<notoSymbol>🢅</notoSymbol>" : "<notoSymbol>🢇</notoSymbol>";
+    newDiv.innerHTML = innerHTML;
     return newDiv;
   },
 };
@@ -88,31 +123,72 @@ class modularGenericElementGroup {
     this.data.locked = true;
     this.data.visible = true;
     this.data.progress = 0;
+    this.data.cooldownProgress = 0;
+    this.data.timesCompleted = 0;
     this.elements = {};
     this.elements.container = null;
     this.elements.header = null;
     this.elements.progressBar = null;
     this.elements.progressText = null;
+    this.elements.add = null;
+    this.elements.sub = null;
+    this.elements.counter = null;
     this.timerFunction = null;
   }
-  go() {
-    this.data.numCommitters += 1;
-    if (!this.timerFunction) {
+  // this will be called if page reloads etc
+  resume() {
+    if (this.data.numCommitters > 0) {
       this.data.state = "running";
       this.timerFunction = setInterval(() => this.running(), global.refreshRate);
     }
   }
+  titleClicked() {}
+  add() {
+    this.data.numCommitters += 1;
+    this.updateCount();
+    if (!this.timerFunction) {
+      this.elements.sub.setAttribute("data-state", "active");
+      this.data.state = "running";
+      this.timerFunction = setInterval(() => this.running(), global.refreshRate);
+    }
+  }
+  sub() {
+    if (this.data.numCommitters < 1) {
+      return;
+    }
+    this.data.numCommitters -= 1;
+    this.updateCount();
+    if (this.data.numCommitters < 1) {
+      if (this.data.cooldownProgress > 0) {
+        this.elements.sub.setAttribute("data-state", "inactive");
+
+        return;
+      }
+      this.paused();
+      clearInterval(this.timerFunction);
+      this.timerFunction = null;
+      this.elements.sub.setAttribute("data-state", "inactive");
+    }
+  }
+  updateCount() {
+    this.elements.counter.innerText = this.data.numCommitters;
+  }
+  paused() {
+    this.data.state = "paused";
+    this.elements.progressText.innerText = "paused";
+  }
   running() {
     this.data.progress += global.refreshRate * this.data.numCommitters;
-    this.updateProgressBar();
+    const progress = this.data.progress / modularContentData[this.index].durationMS;
+
+    this.updateProgressBar(progress);
     this.updateProgressText();
     if (this.data.progress > modularContentData[this.index].durationMS) {
       this.completed();
     }
   }
-  updateProgressBar() {
-    const progress = this.data.progress / modularContentData[this.index].durationMS;
-    const css = common.cssProgressBar(progress);
+  updateProgressBar(progress, blankColor, fillColor) {
+    const css = common.cssProgressBar(progress, blankColor, fillColor);
     this.elements.progressBar.style.background = css;
   }
   updateProgressText(text) {
@@ -120,6 +196,29 @@ class modularGenericElementGroup {
   }
   completed() {
     this.data.progress = 0;
+    if (modularContentData[this.index].coolDownMS) {
+      clearInterval(this.timerFunction);
+      this.data.state = "cooldown";
+      this.elements.progressBar.innerText = "cooldown";
+      this.timerFunction = setInterval(() => this.cooldown(), global.refreshRate);
+    }
+  }
+  cooldown() {
+    console.log("cool");
+    this.data.cooldownProgress += global.refreshRate;
+    if (this.data.cooldownProgress > modularContentData[this.index].coolDownMS) {
+      this.elements.progressBar.innerText = "";
+      this.elements.progressText.innerText = "";
+      this.elements.progressBar.style.background = "white";
+      this.data.cooldownProgress = 0;
+      clearInterval(this.timerFunction);
+      this.timerFunction = null;
+      this.resume();
+      return;
+    }
+    const progress = this.data.cooldownProgress / modularContentData[this.index].coolDownMS;
+    this.updateProgressBar(progress, "blue");
+    this.elements.progressText.innerText = this.msLeftCooldown(true);
   }
   /**
    * returns the milliseconds left until complete
@@ -130,6 +229,13 @@ class modularGenericElementGroup {
    */
   msLeft(format) {
     const msLeft = (modularContentData[this.index].durationMS - this.data.progress) / this.data.numCommitters;
+    if (format == true) {
+      return common.formatTime(msLeft);
+    }
+    return msLeft;
+  }
+  msLeftCooldown(format) {
+    const msLeft = modularContentData[this.index].coolDownMS - this.data.cooldownProgress;
     if (format == true) {
       return common.formatTime(msLeft);
     }
@@ -155,3 +261,7 @@ class playerDataClass {
 
   addInventory(type, quantity) {}
 }
+
+const modalBuilder = {
+  init() {},
+};

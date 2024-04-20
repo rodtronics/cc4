@@ -18,13 +18,14 @@ const modularContentData = [
     ],
     cost: 0,
     requirements: undefined, // undefined means none
-    committersRequired: 1, // if this is 0 or undefined, it'll just be one
-    coolDownMS: 0, // how long to wait before can be done again
+    committersRequired: undefined, // if this is 0 or undefined, it'll just be one
+    coolDownMS: 5000, // how long to wait before can be done again
     maxCriminals: 0, // if 0 or undefined, it's unlimited
     automatable: true, // can it just repeat itself over and over
   },
   {
     type: "crime",
+    description: "",
     displayName: "such a long crime",
     durationMS: 41556952000,
   },
