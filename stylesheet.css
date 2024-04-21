@@ -95,6 +95,7 @@ h1 {
   position: relative;
   text-align: right;
   letter-spacing: -0.05em;
+  padding-right: 10px;
 
   /* font-family: "Sometype Mono", monospace; */
 }

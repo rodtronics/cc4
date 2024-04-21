@@ -143,6 +143,7 @@ let robberyMixin = {
     this.nextRobberyProgress = 0;
     this.nextRobberyProgressEnd = 0;
     this.nextRobberyTimer = null;
+    this.currentTimer = false;
     this.numOfVisibleRobberies = 0;
     this.nextRobberyOpportunity();
   },
@@ -154,6 +155,7 @@ let robberyMixin = {
     //init the progress
     this.nextRobberyProgress = 0;
     this.nextRobberyProgressEnd = newWaitMS;
+    // console.log(`${this.nextRobberyProgress}  ${this.nextRobberyProgressEnd}`);
 
     // get which kind of robbery, it's random
 
@@ -162,35 +164,53 @@ let robberyMixin = {
   },
 
   waitForOpportunity() {
+    this.currentTimer = true;
     this.nextRobberyProgress += global.refreshRate;
+    // console.log(this.nextRobberyProgress);
     const progress = this.nextRobberyProgress / this.nextRobberyProgressEnd;
     const msLeft = this.nextRobberyProgressEnd - this.nextRobberyProgress;
     this.updateProgressBar(progress);
+
     // why this not working?
+
     this.elements.progressText.innerHTML = "next opportunity available:<br>" + common.formatTime(msLeft);
-    if (this.nextRobberyProgress > this.nextRobberyProgressEnd) {
+    if (msLeft < 0) {
       clearInterval(this.nextRobberyTimer);
-      nextRobberyTimer = null;
+      // this.nextRobberyTimer = null;
+
       this.addNewRobbery();
     }
   },
 
   robberiesAddOne() {
     this.numOfVisibleRobberies += 1;
-    if (this.numOfVisibleRobberies < 5) {
+
+    if (this.numOfVisibleRobberies < 5 && this.numOfVisibleRobberies >= 0) {
+      clearInterval(this.nextRobberyTimer);
+
+      // nextRobberyTimer = null;
+      this.currentTimer = true;
       this.nextRobberyOpportunity();
+    } else {
+      clearInterval(this.nextRobberyTimer);
+
+      this.elements.progressText.innerHTML = "no opportunities";
     }
   },
 
   robberiesSubOne() {
     this.numOfVisibleRobberies -= 1;
-
-    if (!nextRobberyTimer) {
+    if (this.currentTimer == false) {
       this.nextRobberyOpportunity();
     }
   },
 
   addNewRobbery() {
+    clearInterval(this.nextRobberyTimer);
+    this.currentTimer = false;
+    if (this.numOfVisibleRobberies > 4) {
+      return;
+    }
     this.robberysArray.push(new robberyClass(this, this.nextRobberyChoiceIndex));
     this.robberiesAddOne();
   },
@@ -337,8 +357,7 @@ class robberyClass {
   collectReward() {
     this.elements.container.removeEventListener("click", () => this.collectReward());
     const rewardArray = robberyData[this.robberyIndex].yield;
-    console.log(rewardArray);
-    player.addInventory();
+    player.addInventory(rewardArray);
     this.destroySelf();
   }
 
@@ -408,6 +427,7 @@ class modularGenericElementGroup {
       return;
     }
     this.data.numCommitters -= 1;
+
     this.updateCount();
     if (this.data.numCommitters < 1) {
       if (this.data.cooldownProgress > 0) {
@@ -514,7 +534,24 @@ class playerDataClass {
    * this expects the
    */
 
-  addInventory(yieldArray) {}
+  addInventory(yieldArray) {
+    yieldArray = common.normaliseData(yieldArray);
+    for (let index = 0; index < yieldArray.length; index++) {
+      const type = yieldArray[index].type;
+      const quantityArray = common.normaliseData(yieldArray[index].quantity);
+      let finalQuantity = 0;
+      if (quantityArray[1]) {
+        const min = Math.min(quantityArray[0], quantityArray[1]);
+        const max = Math.max(quantityArray[0], quantityArray[1]);
+        const random = Math.random();
+        const diff = Math.abs(max - min);
+        finalQuantity = Math.round(random * diff + min);
+      } else {
+        finalQuantity = quantityArray[0];
+      }
+      console.log(`${type} ${finalQuantity}`);
+    }
+  }
 }
 
 const modalBuilder = {
