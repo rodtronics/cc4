@@ -2,7 +2,7 @@
 
 // set the version
 const ccVersion = 0.1;
-const ccCode = "<notoSymbol>🢅</notoSymbol>dank.alpha";
+const ccCode = "<notoSymbol>🢅</notoSymbol> dank.alpha";
 //and apply it
 document.getElementById("versionDivID").innerHTML = `v${ccVersion}${ccCode}`;
 
@@ -44,8 +44,8 @@ const common = {
    */
   cssProgressBar(progress, blankColor, fillColor) {
     progress *= 100;
-    blankColor = blankColor || "black";
-    fillColor = fillColor || "white";
+    blankColor = blankColor || "var(--dark)";
+    fillColor = fillColor || "transparent";
     let css = "";
     css += `linear-gradient(90deg, ${fillColor} 0%,${fillColor} ${progress}%,${blankColor} ${progress}%,${blankColor} 100%)`;
     return css;

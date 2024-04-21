@@ -34,9 +34,10 @@ const modularContentData = [
   {
     type: "robbery",
     description: "",
-    displayName: "this is different",
+    displayName: "minor robberies",
     durationMS: 41556952000,
     potentialRobberies: ["bus"],
+    timeRangeToShow: [500, 2000],
   },
 ];
 
@@ -45,8 +46,9 @@ const robberyData = [
     displayName: "bus",
     description: "you really are going to try and steal change from the bus driver aren't you",
     yield: [{ type: "money", quantity: [0, 2] }],
-    timeRangeToShow: [10000, 30000],
-    timeRangeToStay: [30000, 60000],
+    timeRangeToStay: [120000, 240000],
+    durationMS: 10000,
+    committersNeeded: 2,
   },
 ];
 

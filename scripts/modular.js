@@ -78,10 +78,33 @@ const modularBuilder = {
 
         break;
       case "robbery":
-        elementGroupObject.elements.robberyCounter = this.createDiv();
-        elementGroupObject.elements.container.appendChild(elementGroupObject.elements.robberyCounter);
+        // add progress bar
+
+        elementGroupObject.elements.crimeContainer = this.createDiv();
+        elementGroupObject.elements.container.appendChild(elementGroupObject.elements.crimeContainer);
+        elementGroupObject.elements.crimeContainer.classList.add("elementGroupSubContainer");
+
+        elementGroupObject.elements.container.style.display = "flex";
+        elementGroupObject.elements.container.style.flexDirection = "column";
+        elementGroupObject.elements.container.style.Height = "100%";
+        elementGroupObject.elements.container.style.minHeight = "300px";
+
+        elementGroupObject.elements.crimeContainer.style.display = "flex";
+        elementGroupObject.elements.crimeContainer.style.flexDirection = "column";
+        elementGroupObject.elements.crimeContainer.style.Height = "100%";
+        elementGroupObject.elements.crimeContainer.style.minHeight = "300px";
+
+        elementGroupObject.elements.progressBar = this.createProgressBar();
+        elementGroupObject.elements.crimeContainer.appendChild(elementGroupObject.elements.progressBar);
         elementGroupObject.elements.container.style.gridTemplateColumns = "1fr";
+        elementGroupObject.elements.container.style.gridTemplateRows = "";
+
+        // this is for countdown
+        elementGroupObject.elements.progressText = this.createDiv();
+        elementGroupObject.elements.progressText.classList.add("elementGroupProgressText");
+        elementGroupObject.elements.crimeContainer.appendChild(elementGroupObject.elements.progressText);
         Object.assign(elementGroupObject, robberyMixin);
+
         elementGroupObject.init();
     }
   },
@@ -115,93 +138,157 @@ const modularBuilder = {
  */
 let robberyMixin = {
   init() {
-    this.robberies = [];
-    this.nextRobberyChoiceIndex = 0;
-    this.nextRobberyTime = 0;
-    this.assignNextRobbery();
-    this.robberyWatchTimer = null;
-    this.robberyCloseTimers = [];
+    this.robberysArray = [];
+    this.nextRobberyProgress = 0;
+    this.nextRobberyProgressEnd = 0;
+    this.nextRobberyTimer = null;
+    this.numOfVisibleRobberies = 0;
+    this.nextRobberyOpportunity();
   },
-  /**
-   * this will be called to make a new robbery
-   * @param {*} index this is the index of the reference to the new robbery in the
-   * robbery array
-   */
-  newRobbery(index) {
-    localRobbery = {};
-
-    localRobbery.container = modularBuilder.createDiv();
-    localRobbery.container.classList.add("elementGroupSubContainer");
-
-    localRobbery.header = modularBuilder.createDiv();
-    localRobbery.header.classList.add("elementGroupMinorHeader");
-    localRobbery.header.innerText = "header";
-    localRobbery.header.style.gridRow = 1;
-    localRobbery.container.appendChild(localRobbery.header);
-
-    localRobbery.progressBar = modularBuilder.createProgressBar();
-    localRobbery.progressBar.classList.add("elementGroupProgressBar");
-    localRobbery.progressBar.style.gridRow = 2;
-    localRobbery.container.appendChild(localRobbery.progressBar);
-
-    localRobbery.progressText = modularBuilder.createDiv();
-    localRobbery.progressText.classList.add("elementGroupProgressText");
-    localRobbery.progressText.style.gridRow = 3;
-    localRobbery.container.appendChild(localRobbery.progressText);
-
-    return localRobbery;
-  },
-  startRobbery(index) {
-    localRobbery = this.robberies[index];
-  },
-  assignNextRobbery() {
+  nextRobberyOpportunity() {
     const randomFloat = Math.random();
     const arrayLength = modularContentData[this.index].potentialRobberies.length;
-    const newRobberyIndex = Math.floor(randomFloat * arrayLength);
-    this.nextRobberyChoiceIndex = newRobberyIndex;
-    const newMS = common.randomFromRange(robberyData[newRobberyIndex].timeRangeToShow[0], robberyData[newRobberyIndex].timeRangeToShow[1]);
-    this.nextRobberyTime = dayjs().add(dayjs(newMS, "millisecond"));
-    const newLiveTimeMS = common.randomFromRange(robberyData[newRobberyIndex].timeRangeToStay[0], robberyData[newRobberyIndex].timeRangeToStay[1]);
+    const newRobberyIndexFromModule = Math.floor(arrayLength * randomFloat);
+    const newWaitMS = common.randomFromRange(modularContentData[this.index].timeRangeToShow[0], modularContentData[this.index].timeRangeToShow[1]);
+    //init the progress
+    this.nextRobberyProgress = 0;
+    this.nextRobberyProgressEnd = newWaitMS;
 
-    this.robberies.push(this.newRobbery());
-    this.robberies[this.robberies.length - 1].timeToClose = dayjs().add(dayjs(newLiveTimeMS, "millisecond"));
-    this.robberyWatchTimer = setInterval(() => this.watchNextRobbery(), 123);
+    // get which kind of robbery, it's random
+
+    this.nextRobberyChoiceIndex = newRobberyIndexFromModule;
+    this.nextRobberyTimer = setInterval(() => this.waitForOpportunity(), global.refreshRate);
   },
-  watchNextRobbery() {
-    timeLeft = dayjs(this.nextRobberyTime).diff(dayjs());
-    if (timeLeft < 0) {
-      this.showNextRobbery();
-      clearInterval(this.robberyWatchTimer);
-      this.robberyWatchTimer = null;
-      this.assignNextRobbery();
+
+  waitForOpportunity() {
+    this.nextRobberyProgress += global.refreshRate;
+    const progress = this.nextRobberyProgress / this.nextRobberyProgressEnd;
+    const msLeft = this.nextRobberyProgressEnd - this.nextRobberyProgress;
+    this.updateProgressBar(progress);
+    // why this not working?
+    this.elements.progressText.innerHTML = "next opportunity available:<br>" + common.formatTime(msLeft);
+    if (this.nextRobberyProgress > this.nextRobberyProgressEnd) {
+      clearInterval(this.nextRobberyTimer);
+      nextRobberyTimer = null;
+      this.addNewRobbery();
     }
   },
-  showNextRobbery() {
-    this.elements.container.appendChild(this.robberies[this.robberies.length - 1].container);
-    this.robberyCloseTimers.push(
-      setInterval(() => this.watchCloseRobbery(this.robberies.length - 1), this.robberyCloseTimers.length - 1),
-      1000
-    );
-  },
-  watchCloseRobbery(index, selfIndex) {
-    timeLeft = dayjs(this.robberies[index].timeToClose).diff(dayjs());
-    this.robberies[this.robberies.length - 1].element.robberyCounter.innerText = common.formatTime(timeLeft);
 
-    if (timeLeft < 0) {
-      clearInterval(this.robberyCloseTimers[selfIndex]);
-      this.robberyCloseTimers[selfIndex] = null;
-      this.discardRobbery(index);
-    }
-    console.log(timeLeft);
+  addNewRobbery() {
+    this.robberysArray.push(new robberyClass(this, this.nextRobberyChoiceIndex));
+    this.numVisibleRobberies += 1;
+    this.nextRobberyOpportunity();
   },
-  discardRobbery(robberyIndex) {
-    this.robberies[robberyIndex].container.parentNode.removeChild(his.robberies(robberyIndex).container);
-    this.robberies[robberyIndex].forEach((element) => {
-      element = null;
-    });
-  },
-  robberyComplete(index) {},
 };
+
+class robberyClass {
+  /**
+   *
+   * @param {obj} parentObj the parent holding this
+   * @param {number} robberyIndex the index within the robbery module to provide data about what kind of robbery this is
+   */
+  constructor(parentObj, robberyIndex) {
+    this.indexInParent = parentObj.robberysArray.length;
+    this.parentObj = parentObj;
+
+    this.elements = {};
+    this.robberyIndex = robberyIndex;
+
+    this.opportunityProgressEnd = common.randomFromRange(robberyData[this.robberyIndex].timeRangeToStay[0], robberyData[this.robberyIndex].timeRangeToStay[1]);
+    this.opportunityProgress = 0;
+    this.opportunityTimer = null;
+    this.robberyProgress = null;
+    this.robberyProgressEnd = robberyData[robberyIndex].durationMS;
+    this.robberyTimer = null;
+
+    this.createElements();
+    this.attachElements();
+    this.opportunityTimer = setInterval(() => this.runningOpportunity(), global.refreshRate);
+  }
+  createElements() {
+    this.elements.container = modularBuilder.createDiv();
+    this.elements.container.classList.add("elementGroupSubContainer");
+    this.elements.container.style.display = "grid";
+    this.elements.container.style.gridTemplateColumns = "1fr";
+    this.elements.container.style.gridTemplateRows = "1fr 1fr 1fr";
+    // this.elements.container.style.gridRow = this.parentObj.numOfVisibleRobberies + 3 + " / span 3";
+
+    this.elements.header = modularBuilder.createDiv();
+    this.elements.header.classList.add("elementGroupMinorHeader");
+    this.elements.header.innerText = robberyData[this.robberyIndex].displayName;
+    this.elements.header.style.gridRow = 1;
+    this.elements.container.appendChild(this.elements.header);
+
+    this.elements.progressBar = modularBuilder.createProgressBar();
+    this.elements.progressBar.classList.add("elementGroupProgressBar");
+    this.elements.progressBar.style.gridRow = 2;
+    this.elements.container.appendChild(this.elements.progressBar);
+
+    this.elements.progressText = modularBuilder.createDiv();
+    this.elements.progressText.classList.add("elementGroupProgressText");
+    this.elements.progressText.style.gridRow = 3;
+    this.elements.container.addEventListener("click", () => this.clicked());
+    this.elements.container.appendChild(this.elements.progressText);
+  }
+  attachElements() {
+    this.parentObj.elements.crimeContainer.appendChild(this.elements.container);
+  }
+  runningOpportunity() {
+    this.opportunityProgress += global.refreshRate;
+    const progress = this.opportunityProgress / this.opportunityProgressEnd;
+    const msLeft = this.opportunityProgressEnd - this.opportunityProgress;
+    this.updateProgressBarRobbery(progress, "rgba(255,97,0,0.66)");
+    this.elements.progressText.innerHTML = "opportunity gone in<br>" + common.formatTime(msLeft);
+    if (this.opportunityProgress > this.opportunityProgressEnd) {
+      this.opportunityLost();
+      clearInterval(this.opportunityTimer);
+    }
+  }
+  updateProgressBarRobbery(progress, blankColor, fillColor) {
+    const css = common.cssProgressBar(progress, blankColor, fillColor);
+    this.elements.progressBar.style.background = css;
+  }
+  clicked() {
+    clearInterval(this.opportunityTimer);
+    this.robberyTimer = setInterval(() => this.runningRobbery(), global.refreshRate);
+  }
+
+  runningRobbery() {
+    this.robberyProgress += global.refreshRate;
+    const progress = this.robberyProgress / this.robberyProgressEnd;
+    const msLeft = this.robberyProgressEnd - this.robberyProgress;
+    this.updateProgressBarRobbery(progress);
+    this.elements.progressText.innerHTML = "robbery done in<br>" + common.formatTime(msLeft);
+    if (this.robberyProgress > this.robberyProgressEnd) {
+      console.log("dom");
+      this.completeRobbery();
+      clearInterval(this.robberyTimer);
+      this.robberyTimer = null;
+    }
+  }
+  completeRobbery() {
+    this.elements.progressText.innerHTML = "click to collect rewards";
+    this.updateProgressBarRobbery(1, "white", "var(--rainbow-E)");
+  }
+
+  opportunityLost() {
+    this.elements.progressText.innerHTML = "opportunity lost";
+    this.updateProgressBarRobbery(1, "white", "var(--rainbow-C)");
+
+    setTimeout(() => this.destroySelf(), 10000);
+  }
+
+  destroySelf() {
+    this.elements.container.remove();
+
+    console.log(`${this.indexInParent} in parent killed`);
+    this.parentObj.numOfVisibleRobberies -= 1;
+    // detach all elements
+    this.elements = null;
+
+    this.parentObj.robberysArray[this.indexInParent] = null;
+  }
+}
 
 //
 // this is the generic object that all widgets will have
@@ -312,7 +399,7 @@ class modularGenericElementGroup {
     if (this.data.cooldownProgress > modularContentData[this.index].coolDownMS) {
       this.elements.progressBar.innerText = "";
       this.elements.progressText.innerText = "";
-      this.elements.progressBar.style.background = "white";
+      this.elements.progressBar.style.background = "transparent";
       this.data.cooldownProgress = 0;
       clearInterval(this.timerFunction);
       this.timerFunction = null;
