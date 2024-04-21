@@ -13,6 +13,8 @@ let global = {
   bodyDiv: document.getElementById("bodyDivID"),
 };
 
+let player = new playerDataClass();
+
 const common = {
   /**
    * passed an array, it looks for the property "type", and tries to find

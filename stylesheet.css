@@ -9,6 +9,11 @@
   --rainbow-C: rgb(255, 215, 0);
   --rainbow-D: rgb(0, 188, 62);
   --rainbow-E: rgb(0, 108, 255);
+  --rainbow-A_bright: #D62404;
+  --rainbow-B_bright: #FF794D;
+  --rainbow-C_bright: #FFFB00;
+  --rainbow-D_bright: #00FF6A;
+  --rainbow-E_bright:#00CCFF; 
   --dark:rgb(40,40,40);
   --dark:rgb(66, 66, 66);
 
@@ -119,8 +124,7 @@ h1 {
   height: 300px;
   display: grid;
   grid-template-columns: 1fr 1.5fr 1fr;
-  grid-template-rows: 0.4fr 0.5fr 0.8fr 0.4fr 1fr;
-  /* box-shadow: 5px 5px rgba(0, 0, 0, 0.5), -5px -5px rgba(255, 255, 255, 0.5); */
+  grid-template-rows: 40px 40px 40px 40px  /* box-shadow: 5px 5px rgba(0, 0, 0, 0.5), -5px -5px rgba(255, 255, 255, 0.5); */
   /* box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.66); */
   box-shadow: 5px 5px  var(--dark);
   background: rgba(255, 255, 255, 0.5);
@@ -204,7 +208,7 @@ h1 {
 .elementGroupAddSub[data-state="active"]:hover {
   /* background: rgba(0, 68, 255, 1);
   background: linear-gradient(-20deg, rgba(0, 68, 255, 1) 0%, rgb(0, 166, 255) 100%); */
-  color: red;
+  color: var(--rainbow-D);
 }
 .elementGroupAddSub[data-state="inactive"] {
   color: grey;
@@ -221,7 +225,7 @@ h1 {
 
 
 .elementGroupMinorHeader{
-  height: 20px;
+  /* height: 20px; */
   padding: 5px 10px;
   font-family: "Michroma", sans-serif;
   font-weight: 700;
@@ -231,10 +235,62 @@ h1 {
   grid-column: 1 / span 3;
   text-align: right;
   font-family: "Azeret Mono", monospace;
+  justify-content: bottom ;
+  align-items: bottom;
 }
 
 
 .elementGroupSubContainer{
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 0.7fr 1fr 1fr;
+}
+
+.subGroup{
+  padding: 5px 10px;
+  font-family: "Michroma", sans-serif;
+  font-weight: 700;
+  font-size: 1.2em;
+  letter-spacing: -0.03em;
+  /* line-height: 1em; */
+  /* grid-column: 1 / span 3; */
+  text-align: right;
+  font-family: "Azeret Mono", monospace;
+  justify-content: bottom ;
+  align-items: bottom;
+  color: var(--dark);
+}
+
+.elementGroupSmallButton{
+  position: relative;
+  top: -5px;
+  font-size: 2em;
+  overflow: hidden;
+  text-align: center;
+}
+.elementGroupSmallButton:hover{
+}
+
+.goButton{
+  color: var(--rainbow-D);
+
+}
+.goButton:hover{
+  color: white;
+  color: var(--rainbow-D_bright);
+
+
+}
+
+.noButton{
+  color: var(--rainbow-A);
+}
+
+.noButton:hover{
+  color: white;
+  color: var(--rainbow-A_bright);
+
+
 }
 
 #modalOuterID {

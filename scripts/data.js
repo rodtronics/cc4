@@ -37,7 +37,7 @@ const modularContentData = [
     displayName: "minor robberies",
     durationMS: 41556952000,
     potentialRobberies: ["bus"],
-    timeRangeToShow: [500, 2000],
+    timeRangeToShow: [5000, 20000],
   },
 ];
 
@@ -49,6 +49,11 @@ const robberyData = [
     timeRangeToStay: [120000, 240000],
     durationMS: 10000,
     committersNeeded: 2,
+    yield: [
+      { type: "candy", quantity: [0, 2] }, // if the quantity is an array, it means a range
+      { type: "sadness", quantity: 1 },
+      { type: "money", quantity: 0 },
+    ],
   },
 ];
 

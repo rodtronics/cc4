@@ -81,29 +81,30 @@ const modularBuilder = {
         // add progress bar
 
         elementGroupObject.elements.crimeContainer = this.createDiv();
-        elementGroupObject.elements.container.appendChild(elementGroupObject.elements.crimeContainer);
         elementGroupObject.elements.crimeContainer.classList.add("elementGroupSubContainer");
+        elementGroupObject.elements.crimeContainer.style.display = "flex";
+        elementGroupObject.elements.crimeContainer.style.flexDirection = "column";
 
         elementGroupObject.elements.container.style.display = "flex";
         elementGroupObject.elements.container.style.flexDirection = "column";
-        elementGroupObject.elements.container.style.Height = "100%";
-        elementGroupObject.elements.container.style.minHeight = "300px";
+        elementGroupObject.elements.container.style.justifyContent = "flex-start";
+        elementGroupObject.elements.container.style.alignItems = "centre";
 
-        elementGroupObject.elements.crimeContainer.style.display = "flex";
-        elementGroupObject.elements.crimeContainer.style.flexDirection = "column";
-        elementGroupObject.elements.crimeContainer.style.Height = "100%";
-        elementGroupObject.elements.crimeContainer.style.minHeight = "300px";
+        elementGroupObject.elements.container.style.height = "600px";
+        // elementGroupObject.elements.container.style.minHeight = "300px";
 
         elementGroupObject.elements.progressBar = this.createProgressBar();
-        elementGroupObject.elements.crimeContainer.appendChild(elementGroupObject.elements.progressBar);
         elementGroupObject.elements.container.style.gridTemplateColumns = "1fr";
         elementGroupObject.elements.container.style.gridTemplateRows = "";
 
         // this is for countdown
         elementGroupObject.elements.progressText = this.createDiv();
         elementGroupObject.elements.progressText.classList.add("elementGroupProgressText");
-        elementGroupObject.elements.crimeContainer.appendChild(elementGroupObject.elements.progressText);
         Object.assign(elementGroupObject, robberyMixin);
+
+        elementGroupObject.elements.container.appendChild(elementGroupObject.elements.progressBar);
+        elementGroupObject.elements.container.appendChild(elementGroupObject.elements.progressText);
+        elementGroupObject.elements.container.appendChild(elementGroupObject.elements.crimeContainer);
 
         elementGroupObject.init();
     }
@@ -174,10 +175,24 @@ let robberyMixin = {
     }
   },
 
+  robberiesAddOne() {
+    this.numOfVisibleRobberies += 1;
+    if (this.numOfVisibleRobberies < 5) {
+      this.nextRobberyOpportunity();
+    }
+  },
+
+  robberiesSubOne() {
+    this.numOfVisibleRobberies -= 1;
+
+    if (!nextRobberyTimer) {
+      this.nextRobberyOpportunity();
+    }
+  },
+
   addNewRobbery() {
     this.robberysArray.push(new robberyClass(this, this.nextRobberyChoiceIndex));
-    this.numVisibleRobberies += 1;
-    this.nextRobberyOpportunity();
+    this.robberiesAddOne();
   },
 };
 
@@ -209,25 +224,51 @@ class robberyClass {
     this.elements.container = modularBuilder.createDiv();
     this.elements.container.classList.add("elementGroupSubContainer");
     this.elements.container.style.display = "grid";
-    this.elements.container.style.gridTemplateColumns = "1fr";
-    this.elements.container.style.gridTemplateRows = "1fr 1fr 1fr";
+    this.elements.container.style.gridTemplateColumns = "1fr 4fr";
+    this.elements.container.style.gridTemplateRows = "40px 40px";
     // this.elements.container.style.gridRow = this.parentObj.numOfVisibleRobberies + 3 + " / span 3";
 
-    this.elements.header = modularBuilder.createDiv();
-    this.elements.header.classList.add("elementGroupMinorHeader");
-    this.elements.header.innerText = robberyData[this.robberyIndex].displayName;
-    this.elements.header.style.gridRow = 1;
-    this.elements.container.appendChild(this.elements.header);
+    // this.elements.header = modularBuilder.createDiv();
+    // this.elements.header.classList.add("elementGroupMinorHeader", "thin");
+
+    // this.elements.header.innerText = robberyData[this.robberyIndex].displayName;
+    // this.elements.header.style.gridRow = 1;
+    // this.elements.container.appendChild(this.elements.header);
 
     this.elements.progressBar = modularBuilder.createProgressBar();
-    this.elements.progressBar.classList.add("elementGroupProgressBar");
-    this.elements.progressBar.style.gridRow = 2;
+    this.elements.progressBar.classList.add("elementGroupProgressBar", "subGroup");
+    this.elements.progressBar.innerText = robberyData[this.robberyIndex].displayName;
+
+    this.elements.progressBar.style.gridRow = "1";
+    this.elements.progressBar.style.gridColumn = "1 / span 2";
+
     this.elements.container.appendChild(this.elements.progressBar);
 
     this.elements.progressText = modularBuilder.createDiv();
-    this.elements.progressText.classList.add("elementGroupProgressText");
-    this.elements.progressText.style.gridRow = 3;
-    this.elements.container.addEventListener("click", () => this.clicked());
+    this.elements.progressText.classList.add("elementGroupProgressText", "thin");
+    this.elements.progressText.style.gridRow = "2";
+    this.elements.progressBar.style.gridColumn = "2";
+
+    this.elements.goButton1 = modularBuilder.createDiv();
+    this.elements.goButton1.classList.add("elementGroupSmallButton", "goButton");
+
+    this.elements.goButton1.style.gridRow = "1";
+    this.elements.goButton1.style.gridColumn = "1";
+    this.elements.goButton1.innerHTML = "<notoSymbol>🢅</notoSymbol>";
+
+    this.elements.goButton2 = modularBuilder.createDiv();
+    this.elements.goButton2.classList.add("elementGroupSmallButton", "noButton");
+    this.elements.goButton2.style.gridRow = "2";
+    this.elements.goButton2.style.gridColumn = "1";
+    this.elements.goButton2.innerHTML = "<notoSymbol>🢃</notoSymbol>";
+
+    this.elements.container.appendChild(this.elements.goButton1);
+    this.elements.container.appendChild(this.elements.goButton2);
+
+    this.elements.goButton1.addEventListener("click", () => this.buttonGo());
+    this.elements.goButton2.addEventListener("click", () => this.buttonNo());
+
+    // this.elements.container.addEventListener("click", () => this.clicked());
     this.elements.container.appendChild(this.elements.progressText);
   }
   attachElements() {
@@ -248,19 +289,33 @@ class robberyClass {
     const css = common.cssProgressBar(progress, blankColor, fillColor);
     this.elements.progressBar.style.background = css;
   }
-  clicked() {
+  buttonGo() {
     clearInterval(this.opportunityTimer);
+    this.killButtons();
+    this.elements.progressBar.style.gridColumn = "1 / span 2";
     this.robberyTimer = setInterval(() => this.runningRobbery(), global.refreshRate);
+  }
+  buttonNo() {
+    clearInterval(this.opportunityTimer);
+
+    this.destroySelf();
+  }
+  killButtons() {
+    this.elements.goButton1.remove();
+    this.elements.goButton2.remove();
+    this.elements.goButton1.removeEventListener("click", () => this.buttonGo());
+    this.elements.goButton2.removeEventListener("click", () => this.buttonNo());
+    this.elements.goButton1 = null;
+    this.elements.goButton2 = null;
   }
 
   runningRobbery() {
     this.robberyProgress += global.refreshRate;
     const progress = this.robberyProgress / this.robberyProgressEnd;
     const msLeft = this.robberyProgressEnd - this.robberyProgress;
-    this.updateProgressBarRobbery(progress);
+    this.updateProgressBarRobbery(progress, "var(--rainbow-D)");
     this.elements.progressText.innerHTML = "robbery done in<br>" + common.formatTime(msLeft);
     if (this.robberyProgress > this.robberyProgressEnd) {
-      console.log("dom");
       this.completeRobbery();
       clearInterval(this.robberyTimer);
       this.robberyTimer = null;
@@ -269,6 +324,7 @@ class robberyClass {
   completeRobbery() {
     this.elements.progressText.innerHTML = "click to collect rewards";
     this.updateProgressBarRobbery(1, "white", "var(--rainbow-E)");
+    this.elements.container.addEventListener("click", () => this.collectReward());
   }
 
   opportunityLost() {
@@ -278,11 +334,18 @@ class robberyClass {
     setTimeout(() => this.destroySelf(), 10000);
   }
 
+  collectReward() {
+    this.elements.container.removeEventListener("click", () => this.collectReward());
+    const rewardArray = robberyData[this.robberyIndex].yield;
+    console.log(rewardArray);
+    player.addInventory();
+    this.destroySelf();
+  }
+
   destroySelf() {
     this.elements.container.remove();
 
-    console.log(`${this.indexInParent} in parent killed`);
-    this.parentObj.numOfVisibleRobberies -= 1;
+    this.parentObj.robberiesSubOne();
     // detach all elements
     this.elements = null;
 
@@ -441,15 +504,17 @@ class playerDataClass {
     // player inventory
     this.inventory = [];
 
-    for (let index = 0; index < array.length; index++) {
-      this.inventory[index] = {};
-      this.inventory[index].type = inventoryData[index].type;
-      this.inventory[index].quantity = 0;
-      this.inventory[index].quantityCumulative = 0;
-    }
+    // for (let index = 0; index < array.length; index++) {
+    //   this.inventory[index] = {};
+    //   this.inventory[index].type = inventoryData[index].type;
+    //   this.inventory[index].quantity = 0;
+    //   this.inventory[index].quantityCumulative = 0;
   }
+  /**
+   * this expects the
+   */
 
-  addInventory(type, quantity) {}
+  addInventory(yieldArray) {}
 }
 
 const modalBuilder = {
