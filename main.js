@@ -1,10 +1,11 @@
 // crime committer 4
 
 // set the version
-const ccVersion = 0.1;
-const ccCode = "<notoSymbol>🢅</notoSymbol> dank.alpha";
+const ccVersion = 0.2;
+const notoSymbol = "<notoSymbol>🢅</notoSymbol>";
+const ccCode = "dank$alpha";
 //and apply it
-document.getElementById("versionDivID").innerHTML = `v${ccVersion}${ccCode}`;
+document.getElementById("versionDivID").innerHTML = `v${ccVersion}${notoSymbol} ${ccCode}`;
 
 // this object contains a lot of global values
 let global = {
@@ -14,6 +15,7 @@ let global = {
 };
 
 let player = new playerDataClass();
+createPlayerInventory();
 
 const common = {
   /**
@@ -25,6 +27,7 @@ const common = {
    * ot null if none (rather than -1)
    */
   getIndexInArrayFromType(array, searchType) {
+    console.log(`${array}  ${searchType}`);
     let index = array.findIndex((obj) => obj.type === searchType);
     index = index == -1 ? null : index;
   },

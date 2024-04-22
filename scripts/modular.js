@@ -48,24 +48,19 @@ const modularBuilder = {
       case "crime":
         // progress bar
         elementGroupObject.elements.progressBar = this.createProgressBar();
-        containerElement.appendChild(elementGroupObject.elements.progressBar);
         elementGroupObject.elements.progressText = this.createDiv();
         // progess text
-        elementGroupObject.elements.progressText.classList.add("elementGroupProgressText");
-        containerElement.appendChild(elementGroupObject.elements.progressText);
+        elementGroupObject.elements.progressText.classList.add("elementGroupProgressText", "relativeAndShift");
         // add sub buttons
         elementGroupObject.elements.add = this.createAddSub("add");
         elementGroupObject.elements.add.style.gridColumn = 3;
         elementGroupObject.elements.add.style.gridRow = 4;
         elementGroupObject.elements.add.setAttribute("data-state", "active");
 
-        containerElement.appendChild(elementGroupObject.elements.add);
-
         elementGroupObject.elements.sub = this.createAddSub("sub");
         elementGroupObject.elements.sub.style.gridColumn = 1;
         elementGroupObject.elements.sub.style.gridRow = 4;
         elementGroupObject.elements.sub.setAttribute("data-state", "inactive");
-        containerElement.appendChild(elementGroupObject.elements.sub);
         elementGroupObject.elements.sub.addEventListener("click", () => elementGroupObject.sub());
         // create counter
         elementGroupObject.elements.counter = this.createDiv();
@@ -73,19 +68,26 @@ const modularBuilder = {
         elementGroupObject.elements.counter.style.gridColumn = 2;
         elementGroupObject.elements.counter.style.gridRow = 4;
         elementGroupObject.elements.counter.innerText = elementGroupObject.data.numCommitters;
-        containerElement.appendChild(elementGroupObject.elements.counter);
         elementGroupObject.elements.add.addEventListener("click", () => elementGroupObject.add());
+
+        containerElement.appendChild(elementGroupObject.elements.progressText);
+        containerElement.appendChild(elementGroupObject.elements.progressBar);
+        containerElement.appendChild(elementGroupObject.elements.add);
+        containerElement.appendChild(elementGroupObject.elements.sub);
+        containerElement.appendChild(elementGroupObject.elements.counter);
 
         break;
       case "robbery":
         // add progress bar
 
         elementGroupObject.elements.crimeContainer = this.createDiv();
-        elementGroupObject.elements.crimeContainer.classList.add("elementGroupSubContainer");
+        elementGroupObject.elements.crimeContainer.classList.add("elementGroupSubContainerFlex");
         elementGroupObject.elements.crimeContainer.style.display = "flex";
         elementGroupObject.elements.crimeContainer.style.flexDirection = "column";
 
-        elementGroupObject.elements.container.style.display = "flex";
+        // elementGroupObject.elements.container.style.display = "flex";
+        elementGroupObject.elements.container.style.display = "grid";
+
         elementGroupObject.elements.container.style.flexDirection = "column";
         elementGroupObject.elements.container.style.justifyContent = "flex-start";
         elementGroupObject.elements.container.style.alignItems = "centre";
@@ -95,15 +97,15 @@ const modularBuilder = {
 
         elementGroupObject.elements.progressBar = this.createProgressBar();
         elementGroupObject.elements.container.style.gridTemplateColumns = "1fr";
-        elementGroupObject.elements.container.style.gridTemplateRows = "";
+        elementGroupObject.elements.container.style.gridTemplateRows = "60px 50px 40px 1fr";
 
         // this is for countdown
         elementGroupObject.elements.progressText = this.createDiv();
         elementGroupObject.elements.progressText.classList.add("elementGroupProgressText");
         Object.assign(elementGroupObject, robberyMixin);
 
-        elementGroupObject.elements.container.appendChild(elementGroupObject.elements.progressBar);
         elementGroupObject.elements.container.appendChild(elementGroupObject.elements.progressText);
+        elementGroupObject.elements.container.appendChild(elementGroupObject.elements.progressBar);
         elementGroupObject.elements.container.appendChild(elementGroupObject.elements.crimeContainer);
 
         elementGroupObject.init();
@@ -151,6 +153,8 @@ let robberyMixin = {
     const randomFloat = Math.random();
     const arrayLength = modularContentData[this.index].potentialRobberies.length;
     const newRobberyIndexFromModule = Math.floor(arrayLength * randomFloat);
+    console.log(`${arrayLength}  ${newRobberyIndexFromModule}`);
+
     const newWaitMS = common.randomFromRange(modularContentData[this.index].timeRangeToShow[0], modularContentData[this.index].timeRangeToShow[1]);
     //init the progress
     this.nextRobberyProgress = 0;
@@ -173,7 +177,7 @@ let robberyMixin = {
 
     // why this not working?
 
-    this.elements.progressText.innerHTML = "next opportunity available:<br>" + common.formatTime(msLeft);
+    this.elements.progressText.innerHTML = "next opportunity:<br>" + common.formatTime(msLeft);
     if (msLeft < 0) {
       clearInterval(this.nextRobberyTimer);
       // this.nextRobberyTimer = null;
@@ -256,7 +260,7 @@ class robberyClass {
     // this.elements.container.appendChild(this.elements.header);
 
     this.elements.progressBar = modularBuilder.createProgressBar();
-    this.elements.progressBar.classList.add("elementGroupProgressBar", "subGroup");
+    this.elements.progressBar.classList.add("elementGroupProgressBar", "subGroup", "robberyProgress");
     this.elements.progressBar.innerText = robberyData[this.robberyIndex].displayName;
 
     this.elements.progressBar.style.gridRow = "1";
@@ -549,11 +553,17 @@ class playerDataClass {
       } else {
         finalQuantity = quantityArray[0];
       }
-      console.log(`${type} ${finalQuantity}`);
+      const inventoryIndex = common.getIndexInArrayFromType(inventoryData, "type");
+      console.log(inventoryIndex);
     }
   }
 }
 
-const modalBuilder = {
-  init() {},
-};
+function createPlayerInventory() {
+  for (let index = 0; index < inventoryData.length; index++) {
+    player.inventory[index] = {};
+    player.inventory[index].type = inventoryData[index].type;
+    player.inventory[index].quantity = 0;
+    player.inventory[index].quantityCumulative = 0;
+  }
+}

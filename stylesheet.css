@@ -9,15 +9,14 @@
   --rainbow-C: rgb(255, 215, 0);
   --rainbow-D: rgb(0, 188, 62);
   --rainbow-E: rgb(0, 108, 255);
-  --rainbow-A_bright: #D62404;
-  --rainbow-B_bright: #FF794D;
-  --rainbow-C_bright: #FFFB00;
-  --rainbow-D_bright: #00FF6A;
-  --rainbow-E_bright:#00CCFF; 
-  --dark:rgb(40,40,40);
-  --dark:rgb(66, 66, 66);
-
-
+  --rainbow-A_bright: #d62404;
+  --rainbow-B_bright: #ff794d;
+  --rainbow-C_bright: #fffb00;
+  --rainbow-D_bright: #00ff6a;
+  --rainbow-E_bright: #00ccff;
+  --dark: rgb(40, 40, 40);
+  --dark: rgb(66, 66, 66);
+  --darkAlpha: rgba(66, 66, 66, 0.7);
 
   font-family: "Michroma", sans-serif;
   font-family: "Bebas Neue", sans-serif;
@@ -28,8 +27,9 @@
   letter-spacing: -0.05em;
   font-optical-sizing: auto;
 
-
   user-select: none;
+
+  overflow: hidden;
 }
 
 @font-face {
@@ -78,8 +78,8 @@ h1 {
   border-width: 0 0 5px 0;
   border-style: solid;
   border-color: white;
-  box-shadow: 10px  10px 5px rgba(255, 255, 255, 0.6);
   height: 50px;
+  height: 4vh;
 }
 
 #titleDivID {
@@ -89,7 +89,8 @@ h1 {
   font-size: 3em;
   letter-spacing: -0.05em;
   position: relative;
-  top: -20px;
+  top: -5px;
+  width: 40vw;
 }
 #versionDivID {
   position: relative;
@@ -101,15 +102,34 @@ h1 {
 }
 
 #bodyDivID {
+  z-index: index -5;
   display: flex;
   background: repeating-linear-gradient(-45deg, var(--color-A) 0px, var(--color-A) 20px, var(--dark) 20px, var(--dark) 40px);
-  background: repeating-linear-gradient(-45deg, var(--rainbow-A) 0px, var(--rainbow-A) 20px, var(--dark) 20px, var(--dark) 40px,
-  var(--rainbow-B) 40px, var(--rainbow-B) 60px, var(--dark) 60px, var(--dark) 80px,
-  var(--rainbow-C) 80px, var(--rainbow-C) 100px, var(--dark) 100px, var(--dark) 120px,
-  var(--rainbow-D) 120px, var(--rainbow-D) 140px, var(--dark) 140px, var(--dark) 160px,
-  var(--rainbow-E) 160px, var(--rainbow-E) 180px, var(--dark) 180px, var(--dark) 200px);
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--rainbow-A) 0px,
+    var(--rainbow-A) 20px,
+    var(--dark) 20px,
+    var(--dark) 40px,
+    var(--rainbow-B) 40px,
+    var(--rainbow-B) 60px,
+    var(--dark) 60px,
+    var(--dark) 80px,
+    var(--rainbow-C) 80px,
+    var(--rainbow-C) 100px,
+    var(--dark) 100px,
+    var(--dark) 120px,
+    var(--rainbow-D) 120px,
+    var(--rainbow-D) 140px,
+    var(--dark) 140px,
+    var(--dark) 160px,
+    var(--rainbow-E) 160px,
+    var(--rainbow-E) 180px,
+    var(--dark) 180px,
+    var(--dark) 200px
+  );
 
-  min-height: 80vh;
+  min-height: 94vh;
 }
 
 .elementGroup {
@@ -121,27 +141,27 @@ h1 {
   border-color: transparent;
   border-width: 5px;
   margin: 10px;
-  width: 300px;
-  height: 300px;
+  width: 250px;
+  height: 220px;
   display: grid;
   grid-template-columns: 1fr 1.5fr 1fr;
-  grid-template-rows: 40px 40px 40px 40px  /* box-shadow: 5px 5px rgba(0, 0, 0, 0.5), -5px -5px rgba(255, 255, 255, 0.5); */
+  grid-template-rows: 40px 40px 40px 40px;
+  grid-template-rows: 1fr 0.5fr 1fr 1fr;
+  /* box-shadow: 5px 5px rgba(0, 0, 0, 0.5), -5px -5px rgba(255, 255, 255, 0.5); */
   /* box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.66); */
-  box-shadow: 5px 5px  var(--dark);
-  background: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(2px);
-  transition: background 2s, box-shadow 2s,backdrop-filter 2s;
+  box-shadow: 5px 5px var(--darkAlpha);
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(3px);
+  transition: background 2s, box-shadow 2s, backdrop-filter 2s;
 
   /* transition: box-shadow 2s; */
-
 }
-.elementGroupContainer:hover{
-  background: rgba(255, 255, 255, 0.7);
-  box-shadow: 7px 7px 2px var(--dark);
+.elementGroupContainer:hover {
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 7px 7px 2px var(--darkAlpha);
   backdrop-filter: blur(10px);
 
-  transition: background 0.3s, box-shadow 1s,backdrop-filter 1s;
-
+  transition: background 0.3s, box-shadow 1s, backdrop-filter 1s;
 }
 .elementGroupHeader {
   height: 40px;
@@ -167,9 +187,9 @@ h1 {
 .elementGroupProgressBar {
   /* border-style: solid; */
   border-width: 0 10px;
-  height:25px;
+  height: 25px;
   border-color: transparent;
-  grid-row: 2;
+  grid-row: 3;
   grid-column: 1 / span 3;
   color: hsl(0, 0%, 50%);
   color: white;
@@ -179,15 +199,25 @@ h1 {
   justify-content: center;
 }
 .elementGroupProgressText {
+  /* position:relative ; */
   height: 40px;
   padding: 0 15px;
-  grid-row: 3;
+  grid-row: 2;
   grid-column: 1 / span 3;
   font-weight: 700;
   text-align: right;
   color: hsl(0, 0%, 50%);
   color: rgb(40, 40, 40);
   font-weight: 400;
+}
+
+.relativeAndShift {
+  position: relative;
+  /* top: 20px; */
+}
+
+.robberyProgress:hover {
+  color: white;
 }
 
 .elementGroupAddSub {
@@ -201,7 +231,6 @@ h1 {
   border-width: 4px;
   border-color: transparent;
   border-radius: 20px;
-  text
 }
 .elementGroupAddSub[data-state="active"] {
   color: var(--dark);
@@ -223,9 +252,7 @@ h1 {
   font-family: "Sometype Mono", monospace;
 }
 
-
-
-.elementGroupMinorHeader{
+.elementGroupMinorHeader {
   /* height: 20px; */
   padding: 5px 10px;
   font-family: "Michroma", sans-serif;
@@ -236,18 +263,26 @@ h1 {
   grid-column: 1 / span 3;
   text-align: right;
   font-family: "Azeret Mono", monospace;
-  justify-content: bottom ;
+  justify-content: bottom;
   align-items: bottom;
 }
 
-
-.elementGroupSubContainer{
+.elementGroupSubContainer {
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: 0.7fr 1fr 1fr;
+
+  border-color: var(--dark);
+  border-width: 2px 0 0 0;
+  border-style: solid;
 }
 
-.subGroup{
+.elementGroupSubContainerFlex {
+  display: flex;
+  flex-flow: column;
+}
+
+.subGroup {
   padding: 5px 10px;
   font-family: "Michroma", sans-serif;
   font-weight: 700;
@@ -257,41 +292,34 @@ h1 {
   /* grid-column: 1 / span 3; */
   text-align: right;
   font-family: "Azeret Mono", monospace;
-  justify-content: bottom ;
+  justify-content: bottom;
   align-items: bottom;
   color: var(--dark);
 }
 
-.elementGroupSmallButton{
+.elementGroupSmallButton {
   position: relative;
   top: -5px;
   font-size: 2em;
   overflow: hidden;
   text-align: center;
 }
-.elementGroupSmallButton:hover{
-}
 
-.goButton{
+.goButton {
+  color: var(--dark);
+}
+.goButton:hover {
+  color: white;
   color: var(--rainbow-D);
-
 }
-.goButton:hover{
+
+.noButton {
+  color: var(--dark);
+}
+
+.noButton:hover {
   color: white;
-  color: var(--rainbow-D_bright);
-
-
-}
-
-.noButton{
   color: var(--rainbow-A);
-}
-
-.noButton:hover{
-  color: white;
-  color: var(--rainbow-A_bright);
-
-
 }
 
 #modalOuterID {

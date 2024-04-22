@@ -2,6 +2,8 @@
 // interesting noto symbols 💰🡼🞿🞺🞴🞧☠🮲🮳
 // used to drive the creation of each widget
 
+const gameMetadata = [{ type: "crime", instances: [] }];
+
 const modularContentData = [
   {
     // this one is a bit of a prototype, showing all properties even if not used in this one
@@ -36,14 +38,28 @@ const modularContentData = [
     description: "",
     displayName: "minor robberies",
     durationMS: 41556952000,
-    potentialRobberies: ["bus"],
+    potentialRobberies: ["bus", "test"],
     timeRangeToShow: [2000, 3000],
   },
 ];
 
 const robberyData = [
   {
+    category: 1,
     displayName: "bus",
+    description: "you really are going to try and steal change from the bus driver aren't you",
+    timeRangeToStay: [120000, 240000],
+    durationMS: 1000,
+    committersNeeded: 2,
+    yield: [
+      { type: "candy", quantity: [0, 2] }, // if the quantity is an array, it means a range
+      { type: "sadness", quantity: 1 },
+      { type: "money", quantity: 0 },
+    ],
+  },
+  {
+    category: 1,
+    displayName: "florist",
     description: "you really are going to try and steal change from the bus driver aren't you",
     yield: [{ type: "money", quantity: [0, 2] }],
     timeRangeToStay: [120000, 240000],
@@ -65,4 +81,7 @@ const robberyData = [
  * @value if non zero then means it can be sold
  * @saleRisk if non zero then means chance of losing it without making money
  */
-const inventoryData = [{ type: "candy", description: "a sad little confection, it tastes like regret", value: 0 }];
+const inventoryData = [
+  { type: "candy", displayName: "candy", description: "a sad little confection, it tastes like regret", value: 0 },
+  { type: "sadness", displayName: "sadness", description: "you feel a bit sad about the things you have done", saleValue: 0 },
+];
