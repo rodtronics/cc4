@@ -109,6 +109,22 @@ const common = {
     const answer = Math.round(random * diff + min);
     return answer;
   },
+  /**
+   * given an array of objects, it returns the index of the object
+   * where the type property matches the type value given
+   * @param {array} array of objects
+   * @param {string} type the value to try and match with type property
+   * @returns the index if found, -1 if can't find the matching object, or null if parameters bad
+   */
+  getIndexByType(array, type) {
+    if (!Array.isArray(array) || !type) return null;
+    for (let index = 0; index < array.length; index++) {
+      if (array[index].type === type) {
+        return index;
+      }
+      return -1;
+    }
+  },
 };
 
 const modal = {

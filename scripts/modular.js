@@ -153,7 +153,7 @@ let robberyMixin = {
     const randomFloat = Math.random();
     const arrayLength = modularContentData[this.index].potentialRobberies.length;
     const newRobberyIndexFromModule = Math.floor(arrayLength * randomFloat);
-    console.log(`${arrayLength}  ${newRobberyIndexFromModule}`);
+    // console.log(`${arrayLength}  ${newRobberyIndexFromModule}`);
 
     const newWaitMS = common.randomFromRange(modularContentData[this.index].timeRangeToShow[0], modularContentData[this.index].timeRangeToShow[1]);
     //init the progress

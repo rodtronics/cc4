@@ -4,11 +4,11 @@
   --color-A: rgb(0, 76, 255);
   --color-A: rgb(255, 255, 255);
   --color-A: rgb(133, 0, 181);
-  --rainbow-A: rgb(185, 28, 0);
-  --rainbow-B: rgb(255, 97, 0);
-  --rainbow-C: rgb(255, 215, 0);
-  --rainbow-D: rgb(0, 188, 62);
-  --rainbow-E: rgb(0, 108, 255);
+  --rainbow-A: #b91c00;
+  --rainbow-B: #ff6100;
+  --rainbow-C: #ffd700;
+  --rainbow-D: #00bc3e;
+  --rainbow-E: #006cff;
   --rainbow-A_bright: #d62404;
   --rainbow-B_bright: #ff794d;
   --rainbow-C_bright: #fffb00;
@@ -24,36 +24,14 @@
   font-family: "Sometype Mono", monospace;
   font-family: "Michroma", sans-serif;
   font-family: "Azeret Mono", monospace;
+  /* font-family: "Source Code Pro", monospace; */
+
   letter-spacing: -0.05em;
   font-optical-sizing: auto;
 
   user-select: none;
 
   overflow: hidden;
-}
-
-@font-face {
-  font-family: "d-dinregular";
-  src: url("file:C:/Users/Andrew/Documents/GitHub/cc4/fonts/d-din-webfont.woff2") format("woff2"),
-    url("file:C:/Users/Andrew/Documents/GitHub/cc4/fonts/d-din-webfont.woff") format("woff");
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "d-dindin-bold";
-  src: url("file:C:/Users/Andrew/Documents/GitHub/cc4/fonts/d-din-bold-webfont.woff2") format("woff2"),
-    url("file:C:/Users/Andrew/Documents/GitHub/cc4/fonts/d-din-bold-webfont.woff") format("woff");
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "d-din_condenseddinCnBd";
-  src: url("file:C:/Users/Andrew/Documents/GitHub/cc4/fonts/d-dincondensed-bold-webfont.woff2") format("woff2"),
-    url("file:C:/Users/Andrew/Documents/GitHub/cc4/fonts/d-dincondensed-bold-webfont.woff") format("woff");
-  font-weight: normal;
-  font-style: normal;
 }
 
 notoSymbol {
@@ -74,12 +52,11 @@ h1 {
 
 #headerDivID {
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
   border-width: 0 0 5px 0;
   border-style: solid;
   border-color: white;
   height: 50px;
-  height: 4vh;
 }
 
 #titleDivID {
@@ -89,7 +66,8 @@ h1 {
   font-size: 3em;
   letter-spacing: -0.05em;
   position: relative;
-  top: -5px;
+  top: -10px;
+  left: -10px;
   width: 40vw;
 }
 #versionDivID {
@@ -97,6 +75,7 @@ h1 {
   text-align: right;
   letter-spacing: -0.05em;
   padding-right: 10px;
+  grid-column: 5;
 
   /* font-family: "Sometype Mono", monospace; */
 }
@@ -128,6 +107,7 @@ h1 {
     var(--dark) 180px,
     var(--dark) 200px
   );
+  background: repeating-linear-gradient(-45deg, white 0px, white 20px, var(--dark) 20px, var(--dark) 40px);
 
   min-height: 94vh;
 }
@@ -135,6 +115,7 @@ h1 {
 .elementGroup {
   color: var(--dark);
   background: rgba(255, 255, 255, 00);
+  letter-spacing: -0.075em;
 }
 .elementGroupContainer {
   border-style: solid;
@@ -178,6 +159,8 @@ h1 {
   grid-column: 1 / span 3;
   text-align: right;
   font-family: "Azeret Mono", monospace;
+  /* font-family: "Source Code Pro", monospace; */
+  /* font-family: "d-dinregular"; */
 }
 .elementGroupHeader:hover {
   background: rgba(0, 68, 255, 1);
@@ -258,7 +241,7 @@ h1 {
   font-family: "Michroma", sans-serif;
   font-weight: 700;
   font-size: 1.2em;
-  letter-spacing: -0.03em;
+  /* letter-spacing: -0.03em; */
   /* line-height: 1em; */
   grid-column: 1 / span 3;
   text-align: right;
@@ -287,7 +270,7 @@ h1 {
   font-family: "Michroma", sans-serif;
   font-weight: 700;
   font-size: 1.2em;
-  letter-spacing: -0.03em;
+  /* letter-spacing: -0.03em; */
   /* line-height: 1em; */
   /* grid-column: 1 / span 3; */
   text-align: right;

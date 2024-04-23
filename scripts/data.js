@@ -1,6 +1,56 @@
 //
 // interesting noto symbols 💰🡼🞿🞺🞴🞧☠🮲🮳
 // used to drive the creation of each widget
+/*
+thinking out loud here
+OK so game broken into either 2 or 3 fundament sections
+A crimes you can do
+B research or locations - stuff you can also do
+C managements
+
+perhaps B is not needed
+
+
+within A there are a few different kinds of crimes
+
+there are basic crimes. they take time. you can possibly set them to auto repeat
+you can add more people to make them go faster but its significantly less efficient the more poeple you add
+
+opportunity crimes. the opportunity comes and goes. this rewards you on being around to catch it I guess
+
+
+
+
+
+meta stuff
+
+inventory and or warehouse
+
+are these the same or different???
+
+
+
+managing people. make this simple.
+
+
+
+what about research???
+
+
+investments?
+
+
+
+
+
+
+something to deciode... how about LEVEL
+
+
+
+
+
+*/
 
 const gameMetadata = [{ type: "crime", instances: [] }];
 
