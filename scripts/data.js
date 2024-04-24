@@ -58,6 +58,8 @@ const gameMetadata = [
   { type: "location", instances: [] },
 ];
 
+const staticCrimesData = [{ uid: "" }];
+
 const modularContentData = [
   {
     // this one is a bit of a prototype, showing all properties even if not used in this one

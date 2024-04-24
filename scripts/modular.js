@@ -618,4 +618,42 @@ class criminalsClass {
   }
 }
 
-const moduleBuilder = {};
+const moduleBuilder = {
+  start() {
+    for (let index = 0; index < gameMetadata.length; index++) {
+      switch (gameMetadata[index].type) {
+        case "staticCrime":
+          const instancesArray = gameMetadata[index].instances;
+          staticCrimeModule(instancesArray);
+      }
+    }
+  },
+  /**
+   *
+   * @param {string OR array of strings} additionalClasses
+   */
+  createDiv(additionalClasses) {
+    const newDiv = document.createElement("div");
+    newDiv.classList.add("elementGroup");
+    if (additionalClasses) {
+      additionalClasses = common.normaliseData(additionalClasses);
+      for (let index = 0; index < additionalClasses.length; index++) {
+        newDiv.classList.add(additionalClasses[index]);
+      }
+    }
+  },
+
+  staticCrimeModule(instancesArray) {
+    instancesArray = common.normaliseData(instancesArray);
+  },
+};
+
+class moduleClass {
+  constructor(type, uid) {
+    this.type = type;
+    this.uid = uid;
+    this.elements = {};
+    this.data = {};
+    this.data.visible = false;
+  }
+}
