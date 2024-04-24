@@ -52,11 +52,12 @@ h1 {
 
 #headerDivID {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 2fr 1fr 1.5fr 0.8fr;
   border-width: 0 0 5px 0;
   border-style: solid;
   border-color: white;
   height: 50px;
+  z-index: -5;
 }
 
 #titleDivID {
@@ -70,18 +71,68 @@ h1 {
   left: -10px;
   width: 40vw;
 }
+#infoDivID {
+  grid-column: 2;
+  height: 100%;
+  margin: 2px;
+  padding: 5px 10px;
+  font-size: 1.2em;
+  text-align: center;
+}
+#tabDivID {
+  grid-column: 3;
+  display: flex;
+  flex: 2;
+  flex-direction: row;
+  height: 100%;
+  /* z-index: 0; */
+}
+
+.tabClass {
+  width: 100%;
+  height: 25px;
+  position: relative;
+  top: 15px;
+  margin: 2px;
+  padding: 5px 10px;
+  font-size: 1.2em;
+  text-align: right;
+  color: var(--dark);
+}
+
+.tabClass[data-tabState="active"] {
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--rainbow-B);
+}
+.tabClass[data-tabState="inactive"] {
+  font-weight: 200;
+  background: rgba(255, 255, 255, 0.3);
+}
+
 #versionDivID {
   position: relative;
   text-align: right;
   letter-spacing: -0.05em;
   padding-right: 10px;
-  grid-column: 5;
+  grid-column: 4;
 
   /* font-family: "Sometype Mono", monospace; */
 }
 
+#filterDivID {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(1.5px);
+  mix-blend-mode: screen;
+  opacity: 0.3;
+  z-index: 5;
+  pointer-events: none;
+}
+
 #bodyDivID {
-  z-index: index -5;
+  z-index: index -4;
   display: flex;
   background: repeating-linear-gradient(-45deg, var(--color-A) 0px, var(--color-A) 20px, var(--dark) 20px, var(--dark) 40px);
   background: repeating-linear-gradient(

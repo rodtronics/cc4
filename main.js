@@ -3,7 +3,7 @@
 // set the version
 const ccVersion = 0.2;
 const notoSymbol = "<notoSymbol>🢅</notoSymbol>";
-const ccCode = "dank$alpha";
+const ccCode = "dank.alpha";
 //and apply it
 document.getElementById("versionDivID").innerHTML = `v${ccVersion}${notoSymbol} ${ccCode}`;
 
@@ -12,10 +12,19 @@ let global = {
   refreshRate: 61.8 / 2, //phi divided by 2, means values accumulate in an unrepeating fashion
   precision: 4, // precision on floats
   bodyDiv: document.getElementById("bodyDivID"),
+  infoDiv: document.getElementById("infoDivID"),
+
+  updateMoney() {
+    let money = player.money.toFixed(0).toLocaleString();
+    this.infoDiv.innerHTML = `$${money}`;
+  },
 };
 
 let player = new playerDataClass();
-createPlayerInventory();
+
+let inventory = new inventoryClass();
+
+global.updateMoney();
 
 const common = {
   /**
@@ -27,7 +36,7 @@ const common = {
    * ot null if none (rather than -1)
    */
   getIndexInArrayFromType(array, searchType) {
-    console.log(`${array}  ${searchType}`);
+    // console.log(`${array}  ${searchType}`);
     let index = array.findIndex((obj) => obj.type === searchType);
     index = index == -1 ? null : index;
   },

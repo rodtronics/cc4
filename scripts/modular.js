@@ -361,7 +361,7 @@ class robberyClass {
   collectReward() {
     this.elements.container.removeEventListener("click", () => this.collectReward());
     const rewardArray = robberyData[this.robberyIndex].yield;
-    player.addInventory(rewardArray);
+    inventory.addInventoryByArray(rewardArray);
     this.destroySelf();
   }
 
@@ -472,6 +472,7 @@ class modularGenericElementGroup {
     this.elements.progressText.innerText = text || this.msLeft(true);
   }
   completed() {
+    inventory.addInventoryByArray(modularContentData[this.index].yield);
     this.data.progress = 0;
     if (modularContentData[this.index].coolDownMS) {
       clearInterval(this.timerFunction);
@@ -481,7 +482,6 @@ class modularGenericElementGroup {
     }
   }
   cooldown() {
-    console.log("cool");
     this.data.cooldownProgress += global.refreshRate;
     if (this.data.cooldownProgress > modularContentData[this.index].coolDownMS) {
       this.elements.progressBar.innerText = "";
@@ -525,20 +525,40 @@ class playerDataClass {
     this.money = 0;
     this.moneyCumulative = 0;
     this.dateTimeStarted = dayjs();
-    // player inventory
-    this.inventory = [];
+  }
+  addMoney(amount) {
+    this.money += amount;
+    this.moneyCumulative += amount;
+    global.updateMoney();
+  }
+  subMoney(amount) {
+    if (this.money < amount) return -1;
+    this.money -= amount;
+    global.updateMoney();
+  }
+}
 
-    // for (let index = 0; index < array.length; index++) {
-    //   this.inventory[index] = {};
-    //   this.inventory[index].type = inventoryData[index].type;
-    //   this.inventory[index].quantity = 0;
-    //   this.inventory[index].quantityCumulative = 0;
+class inventoryClass {
+  constructor() {
+    this.inventory = [];
+    for (let index = 0; index < inventoryData.length; index++) {
+      this.inventory[index] = {};
+      this.inventory[index].type = inventoryData[index].type;
+      this.inventory[index].quantity = 0;
+      this.inventory[index].quantityCumulative = 0;
+    }
+  }
+  checkInventory(type) {
+    const index = this.getIndexByType(type);
+    if (index == null || index == -1) return index;
+    return this.inventory[index].quantity;
   }
   /**
-   * this expects the
+   * this is passed an array of objects (or they're normalised into an array)
+   * and adds them, and allows for variable amounts
+   * @param {array} yieldArray
    */
-
-  addInventory(yieldArray) {
+  addInventoryByArray(yieldArray) {
     yieldArray = common.normaliseData(yieldArray);
     for (let index = 0; index < yieldArray.length; index++) {
       const type = yieldArray[index].type;
@@ -553,17 +573,49 @@ class playerDataClass {
       } else {
         finalQuantity = quantityArray[0];
       }
-      const inventoryIndex = common.getIndexInArrayFromType(inventoryData, "type");
-      console.log(inventoryIndex);
+      this.addInventoryByType(type, finalQuantity);
+      // console.log(inventoryIndex);
     }
+  }
+  /**
+   * this method doesn't allow for arrays of amounts
+   * @param {string} type
+   * @param {number} amount
+   * @returns null if bad input and -1 if can't find index
+   */
+  addInventoryByType(type, amount) {
+    const index = this.getIndexByType(type);
+    if (index == null || index == -1) return index;
+    if (type == "money") {
+      player.addMoney(amount);
+    }
+    this.inventory[index].quantity += amount;
+    this.inventory[index].quantityCumulative += amount;
+    console.log(`Inventory: ${type} +${amount}`);
+  }
+  subInventory(type, amount) {
+    const index = this.getIndexByType(type);
+    if (index == null || index == -1) return index;
+    if (this.inventory[index].quantity < amount) return "notEnough";
+    this.inventory[index].quantity -= amount;
+    console.log(`Inventory: ${type} -${amount}`);
+    return this.inventory[index].quantity;
+  }
+  getIndexByType(type) {
+    if (!type) return null;
+    for (let index = 0; index < inventoryData.length; index++) {
+      if (inventoryData[index].type == type) {
+        return index;
+      }
+    }
+    return -1;
   }
 }
 
-function createPlayerInventory() {
-  for (let index = 0; index < inventoryData.length; index++) {
-    player.inventory[index] = {};
-    player.inventory[index].type = inventoryData[index].type;
-    player.inventory[index].quantity = 0;
-    player.inventory[index].quantityCumulative = 0;
+class criminalsClass {
+  constructor() {
+    this.number = 1;
   }
 }
+
+const moduleBuilder = {};

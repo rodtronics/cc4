@@ -61,7 +61,7 @@ const cssBuilder = {
 
 document.getElementById("versionDivID").addEventListener("click", () => swapColors());
 
-let colorCycler = 0;
+let colorCycler = 2;
 
 function swapColors() {
   colorCycler = colorCycler % colorSets.length;
@@ -69,3 +69,25 @@ function swapColors() {
   colorCycler += 1;
 }
 swapColors();
+
+let numberMap = new Map();
+
+numberMap.set(0, "🯰");
+numberMap.set(1, "🯱");
+numberMap.set(2, "🯲");
+numberMap.set(3, "🯳");
+numberMap.set(4, "🯴");
+numberMap.set(5, "🯵");
+numberMap.set(6, "🯶");
+numberMap.set(7, "🯷");
+numberMap.set(8, "🯸");
+numberMap.set(9, "🯹");
+
+function numberToDigital(number) {
+  let digitalNumber = "";
+  let splitNum = [...(number + "")].map((n) => +n);
+  for (let index = 0; index < splitNum.length; index++) {
+    digitalNumber += numberMap.get(splitNum[index]);
+  }
+  return `<notoSymbol2>${digitalNumber}</notoSymbol2>`;
+}
