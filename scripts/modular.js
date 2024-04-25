@@ -707,6 +707,8 @@ const moduleBuilder = {
       newModule.elements.checkButton.innerHTML = "<notoSymbol3>⮔</notoSymbol3>";
       newModule.elements.checkButton.setAttribute("data-checkState", "off");
 
+      newModule.elements.subHeaderNet.classList.add("borderLeft");
+
       // set locations
       newModule.elements.container.style.gridTemplateColumns = "repeat (4,1fr)";
       newModule.elements.container.style.gridTemplateRows = "1fr 1fr 1fr 1fr";
@@ -799,25 +801,28 @@ class moduleClass {
     this.type = type;
     this.uid = uid;
     this.dataSet = undefined;
-    this.state = undefined;
+    this.state = "virgin";
     this.autoState = false;
     this.elements = {};
     this.data = {};
-    this.data.visible = false;
+    this.data.progress = 0;
+    this.visible = false;
     this.display = true;
     this.req = [{}];
     this.net = [{}];
+    this.intervalTimer = null;
   }
 
   init() {
     this.buildReqNet();
     this.updateReqNet(true);
     this.updateReqNet(false);
-    this.setEventHandlers();
+    this.setEventListeners();
   }
 
-  setEventHandlers() {
+  setEventListeners() {
     this.elements.checkButton.addEventListener("click", () => this.toggleAutoState());
+    this.elements.header.addEventListener("click", () => this.startStop());
   }
 
   // run after initialisation, builds reqs and nets as normalised
@@ -890,9 +895,6 @@ class moduleClass {
     if (localSet) {
       for (let index = 0; index < localSet.length; index++) {
         let localSet2 = localSet[index];
-        // console.log(this.dataSet.net);
-        // console.log(`${this.uid} ${localSet2.type}`);
-        if (localSet2.type == undefined) console.log(localSet2);
         newHTML += `${localSet2.type}`;
 
         if (Array.isArray(localSet2.quantity)) {
@@ -930,9 +932,48 @@ class moduleClass {
    * @param {boolean} force
    */
   redraw(force) {
-    if (force == true || state == "running") {
+    if (force == true || this.state == "running") {
       // logic for redrawing progress bars
       // and numbers
+      const progress = this.calcProgress();
+      const newProgressCss = common.cssProgressBar(progress);
+      this.elements.progressBar.style.background = newProgressCss;
+    }
+  }
+  calcProgress() {
+    const durationMS = this.dataSet.durationMS ? this.dataSet.durationMS : 10000;
+    return this.data.progress / durationMS;
+  }
+
+  startStop() {
+    switch (this.state) {
+      case "running":
+        this.state = "paused";
+        clearInterval(this.intervalTimer);
+        break;
+      case "virgin":
+      case "paused":
+
+      case "completed":
+        setInterval(() => this.running(), global.refreshRate);
+        this.state = "running";
+        break;
+    }
+  }
+
+  running() {
+    this.progress += global.refreshRate;
+    if (this.progress > this.dataSet.durationMS) {
+      this.completed();
+    }
+  }
+
+  completed() {
+    this.progress = 0;
+    if (this.toggleAutoState == true) {
+    } else {
+      clearInterval(this.intervalTimer);
+      this.state = "completed";
     }
   }
 }

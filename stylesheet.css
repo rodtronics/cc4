@@ -16,7 +16,7 @@
   --rainbow-E_bright: #00ccff;
   --dark: rgb(40, 40, 40);
   --dark: rgb(66, 66, 66);
-  --darkAlpha: rgba(66, 66, 66, 0.7);
+  --darkAlpha: rgba(66, 66, 66, 0.5);
 
   font-family: "Michroma", sans-serif;
   font-family: "Bebas Neue", sans-serif;
@@ -49,7 +49,7 @@ notoSymbol3 {
 }
 
 minusLineHeight {
-  line-height: -1em;
+  line-height: 0.2em;
 }
 
 h1 {
@@ -206,7 +206,7 @@ reqNet {
   border-width: 5px;
   margin: 10px;
   width: 250px;
-  height: 220px;
+  height: 250px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: 40px 40px 40px 40px;
@@ -214,8 +214,8 @@ reqNet {
   /* box-shadow: 5px 5px rgba(0, 0, 0, 0.5), -5px -5px rgba(255, 255, 255, 0.5); */
   /* box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.66); */
   box-shadow: 5px 5px var(--darkAlpha);
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(3px);
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(5px);
   transition: background 2s, box-shadow 2s, backdrop-filter 2s;
 
   /* transition: box-shadow 2s; */
@@ -242,6 +242,7 @@ reqNet {
   grid-column: 1 / span 4;
   text-align: right;
   font-family: "Azeret Mono", monospace;
+  margin-bottom: 4px;
   /* font-family: "Source Code Pro", monospace; */
   /* font-family: "d-dinregular"; */
 }
@@ -254,6 +255,13 @@ reqNet {
 
 .elementGroupSubHeader {
   padding: 5px;
+  margin-bottom: 5px;
+}
+
+.borderLeft {
+  border-style: solid;
+  border-color: var(--dark);
+  border-width: 0 0 0 2px;
 }
 
 .elementGroupProgressBar {

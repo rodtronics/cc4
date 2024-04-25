@@ -74,6 +74,7 @@ const staticCrimesData = [
     uid: "stealshoe",
     displayName: "stealing shoes",
     net: { type: "shoes", quantity: [0, 2] },
+    durationMS: 10000,
   },
   { uid: "jaywalk", displayName: "jaywalking", description: "walking, but where you shouldn't" },
   { uid: "chalk", displayName: "chalk vandalism", description: "eco friendly taggin", req: { type: "chalk", quantity: 2 }, criminals: 2 },
