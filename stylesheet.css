@@ -70,6 +70,7 @@ h1 {
   top: -2px;
   left: -10px;
   width: 40vw;
+  /* filter: blur(0.4px); */
 }
 #infoDivID {
   grid-column: 2;
@@ -121,14 +122,22 @@ h1 {
   /* font-family: "Sometype Mono", monospace; */
 }
 
-#filterDivID {
+#bodyFilterDiv {
   position: absolute;
+  position: fixed;
   width: 100%;
   height: 100%;
-  backdrop-filter: blur(1.5px);
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.filterDiv {
+  backdrop-filter: blur(2px);
   mix-blend-mode: screen;
   opacity: 0.3;
-  z-index: 5;
+  z-index: 10;
   pointer-events: none;
 }
 
@@ -177,7 +186,7 @@ h1 {
   width: 250px;
   height: 220px;
   display: grid;
-  grid-template-columns: 1fr 1.5fr 1fr;
+  grid-template-columns: repeat(4, 1fr);
   grid-template-rows: 40px 40px 40px 40px;
   grid-template-rows: 1fr 0.5fr 1fr 1fr;
   /* box-shadow: 5px 5px rgba(0, 0, 0, 0.5), -5px -5px rgba(255, 255, 255, 0.5); */
@@ -190,7 +199,7 @@ h1 {
   /* transition: box-shadow 2s; */
 }
 .elementGroupContainer:hover {
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 1);
   box-shadow: 7px 7px 2px var(--darkAlpha);
   backdrop-filter: blur(10px);
 
@@ -208,7 +217,7 @@ h1 {
   font-size: 1.2em;
   letter-spacing: -0.03em;
   line-height: 1em;
-  grid-column: 1 / span 3;
+  grid-column: 1 / span 4;
   text-align: right;
   font-family: "Azeret Mono", monospace;
   /* font-family: "Source Code Pro", monospace; */

@@ -618,13 +618,19 @@ class criminalsClass {
   }
 }
 
+/**
+ * this is the new one
+ */
 const moduleBuilder = {
+  /**
+   * starts going through the metadata and switches
+   */
   start() {
     for (let index = 0; index < gameMetadata.length; index++) {
       switch (gameMetadata[index].type) {
         case "staticCrime":
           const instancesArray = gameMetadata[index].instances;
-          staticCrimeModule(instancesArray);
+          this.staticCrimeModule(instancesArray);
       }
     }
   },
@@ -641,10 +647,95 @@ const moduleBuilder = {
         newDiv.classList.add(additionalClasses[index]);
       }
     }
+    return newDiv;
+  },
+  createHeaderDiv(text) {
+    const newDiv = this.createDiv("elementGroupHeader");
+    newDiv.innerText = text;
+    return newDiv;
+  },
+  createSubHeaderDiv() {
+    const newDiv = this.createDiv("elementGroupSubHeader");
+    return newDiv;
+  },
+  createContainterDiv() {
+    const newDiv = this.createDiv("elementGroupContainer");
+    return newDiv;
+  },
+  createProgressBarDiv() {
+    const newDiv = this.createDiv("elementGroupProgressBar");
+    return newDiv;
+  },
+  createProgressTextDiv() {
+    const newDiv = this.createDiv("elementGroupProgressText");
+    return newDiv;
   },
 
   staticCrimeModule(instancesArray) {
     instancesArray = common.normaliseData(instancesArray);
+    for (let index = 0; index < instancesArray.length; index++) {
+      // make a static crime
+      const uid = instancesArray[index];
+      const dataIndex = this.getDataIndexByUID("staticCrime", uid);
+      const data = staticCrimesData[dataIndex];
+      let newModule = new moduleClass("staticCrime", uid);
+
+      // reference the dataset here, makes easy
+      newModule.dataSet = data;
+      // console.log(`static crime module: ${uid}  ${dataIndex}`);
+
+      // create DIVs
+      newModule.elements.container = this.createContainterDiv();
+      newModule.elements.header = this.createHeaderDiv(data.displayName);
+      newModule.elements.subHeaderReq = this.createSubHeaderDiv();
+      newModule.elements.subHeaderNet = this.createSubHeaderDiv();
+      newModule.elements.progressBar = this.createProgressBarDiv();
+      newModule.elements.progressText = this.createProgressTextDiv();
+
+      // add req and new
+      let reqHTML = "";
+      reqHTML += "requirements:";
+      if (data.reqs)
+        // set locations
+        newModule.elements.container.style.gridTemplateColumns = "repeat (4,1fr)";
+      newModule.elements.container.style.gridTemplateRows = "1fr 1fr 1fr 1fr";
+      newModule.elements.header.style.gridRow = "1";
+      newModule.elements.header.style.gridColumn = "1 / span 4";
+      newModule.elements.subHeaderReq.style.gridRow = "2";
+      newModule.elements.subHeaderReq.style.gridColumn = "1 / span 2";
+      newModule.elements.subHeaderNet.style.gridRow = "2";
+      newModule.elements.subHeaderNet.style.gridColumn = "3 / span 2";
+      newModule.elements.progressBar.style.gridRow = "3";
+      newModule.elements.progressBar.style.gridColumn = "1 / span 4";
+      newModule.elements.progressText.style.gridRow = "4";
+      newModule.elements.progressText.style.gridColumn = "1 / span 4";
+
+      // append
+      newModule.elements.container.appendChild(newModule.elements.header);
+      newModule.elements.container.appendChild(newModule.elements.subHeaderReq);
+      newModule.elements.container.appendChild(newModule.elements.subHeaderNet);
+      newModule.elements.container.appendChild(newModule.elements.progressBar);
+      newModule.elements.container.appendChild(newModule.elements.progressText);
+
+      moduleArray.push(newModule);
+    }
+  },
+  getDataIndexByUID(type, uid) {
+    let dataArrayToSearch = null;
+    switch (type) {
+      case "staticCrime":
+        dataArrayToSearch = staticCrimesData;
+        break;
+      default:
+        return null;
+    }
+    for (let index = 0; index < dataArrayToSearch.length; index++) {
+      // console.log(`getdataindex  ${uid}  ${dataArrayToSearch[index].uid}`);
+      if (dataArrayToSearch[index].uid == uid) {
+        return index;
+      }
+    }
+    return -1;
   },
 };
 
@@ -652,8 +743,24 @@ class moduleClass {
   constructor(type, uid) {
     this.type = type;
     this.uid = uid;
+    this.dataSet = undefined;
+    this.state = undefined;
     this.elements = {};
     this.data = {};
     this.data.visible = false;
+    this.display = {};
+  }
+  /**
+   * this asks the module to redraw
+   * idea is this is called every anim frame, just to redraw the gfx
+   * won't run unless the module is "running", or if forced (useful
+   * for redrawing immediately after a pause or complete for ex)
+   * @param {boolean} force
+   */
+  redraw(force) {
+    if (force == true || state == "running") {
+      // logic for redrawing progress bars
+      // and numbers
+    }
   }
 }

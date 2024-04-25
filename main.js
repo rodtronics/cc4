@@ -20,12 +20,6 @@ let global = {
   },
 };
 
-let player = new playerDataClass();
-
-let inventory = new inventoryClass();
-
-global.updateMoney();
-
 const common = {
   /**
    * passed an array, it looks for the property "type", and tries to find
@@ -158,20 +152,22 @@ const modal = {
 };
 modal.modalOuter.addEventListener("click", () => modal.closeModal());
 
-// init
+/*
 
-//
-//
-// init the array of widgets
-let elementGroupArray = [];
-// fill the array
-for (let index = 0; index < modularContentData.length; index++) {
-  // make a new object and assign into the array
-  elementGroupArray[index] = new modularGenericElementGroup(index);
-  // pass object into the builder
-  modularBuilder.buildElementGroup(elementGroupArray[index]);
-}
+INITILISATIONSSS */
 
-for (let index = 0; index < elementGroupArray.length; index++) {
-  global.bodyDiv.appendChild(elementGroupArray[index].elements.container);
+//player init
+let player = new playerDataClass();
+// inventory init
+let inventory = new inventoryClass();
+//module init
+let moduleArray = [];
+moduleBuilder.start();
+// tab
+const tabDiv = document.getElementById("tabDivID");
+makePrimaryTabs(tabDiv);
+setActiveTab(0);
+
+for (let index = 0; index < moduleArray.length; index++) {
+  global.bodyDiv.appendChild(moduleArray[index].elements.container);
 }

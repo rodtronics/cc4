@@ -2,6 +2,27 @@ const colorSets = [
   ["#B91C00", "#FF6100", "#FFD700", "#00BC3E", "#006CFF"],
   ["rgb(255,255,255)"],
   ["#F94144", "#F3722C", "#F8961E", "#F9844A", "#F9C74F", "#90BE6D", "#43AA8B", "#4D908E", "#577590", "#277DA1"],
+  [
+    "#F94144",
+    "#F3722C",
+    "#F8961E",
+    "#F9844A",
+    "#F9C74F",
+    "#90BE6D",
+    "#43AA8B",
+    "#4D908E",
+    "#577590",
+    "#277DA1",
+    "#577590",
+    "#4D908E",
+    "#43AA8B",
+    "#90BE6D",
+    "#F9C74F",
+    "#F9844A",
+    "#F8961E",
+    "#F3722C",
+  ],
+
   ["#F94144", "#F3722C", "#F8961E", "#F9C74F", "#90BE6D", "#43AA8B", "#577590"],
   ["#ee4181", "#fa6425", "#fbe61b", "#93b82d", "#108dad", "#108dad", "#108dad", "#108dad", "#108dad", "#108dad"],
   ["#03071E", "#370617", "#6A040F", "#9D0208", "#D00000", "#DC2F02", "#E85D04", "#F48C06", "#FAA307", "#FFBA08"],
@@ -36,6 +57,7 @@ const cssBuilder = {
     // init
     let earlycss = "";
     let finalCSS = "";
+
     for (let index = 0; index < colorSets[set].length; index++) {
       // this is the code I finally devised that does the job
       let num1 = spacing * 0 + spacing * index * 2;

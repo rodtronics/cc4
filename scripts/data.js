@@ -53,12 +53,16 @@ something to deciode... how about LEVEL
 */
 
 const gameMetadata = [
-  { type: "staticCrime", instances: [] },
+  { type: "staticCrime", instances: ["jaywalk", "stayup", "chalk"] },
   { type: "opportunityCrime", instances: [] },
   { type: "location", instances: [] },
 ];
 
-const staticCrimesData = [{ uid: "" }];
+const staticCrimesData = [
+  { uid: "jaywalk", displayName: "jaywalking", description: "walking, but where you shouldn't" },
+  { uid: "chalk", displayName: "chalk vandalism", description: "eco friendly taggin", reqs: "chalk" },
+  { uid: "stayup", displayName: "staying up past bedtime", description: "mum is gonna be pissed when she finds out", net: "tired" },
+];
 
 const modularContentData = [
   {

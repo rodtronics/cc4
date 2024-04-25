@@ -23,17 +23,26 @@ function makePrimaryTabs(divToAppendTo) {
   }
 }
 
-function setActiveTab(index) {
-  console.log(index);
+function setActiveTab(tabIndex) {
   // turn off all tabs
   for (let index = 0; index < primaryTabs.length; index++) {
     primaryTabs[index].element.setAttribute("data-tabState", "inactive");
   }
   // turn on the right one
-  primaryTabs[index].element.setAttribute("data-tabState", "active");
+  primaryTabs[tabIndex].element.setAttribute("data-tabState", "active");
+  //clear all elements from the body
+
+  clearElements();
   // then display the relevant icons
+  for (let index = 0; index < moduleArray.length; index++) {
+    if (tabIndex == 0 && moduleArray[index].type == "staticCrime") {
+      global.bodyDiv.appendChild(moduleArray[index].elements.container);
+    }
+  }
 }
 
-const tabDiv = document.getElementById("tabDivID");
-makePrimaryTabs(tabDiv);
-setActiveTab(0);
+function clearElements() {
+  while (global.bodyDiv.firstChild) {
+    global.bodyDiv.removeChild(global.bodyDiv.lastChild);
+  }
+}
