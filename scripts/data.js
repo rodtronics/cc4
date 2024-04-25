@@ -58,10 +58,31 @@ const gameMetadata = [
   { type: "location", instances: [] },
 ];
 
+let constructionDataObject = {
+  type: "staticCrime",
+  elements: {
+    container: {
+      gridTemplaceColumns: "repeat (4,1fr)",
+      gridTemplaceRows: "1fr 1fr 1fr 1fr",
+    },
+    header: { gridRow: "1", gridColumn: "1 / span 4" },
+  },
+};
+
 const staticCrimesData = [
+  {
+    uid: "stealshoe",
+    displayName: "stealing shoes",
+    net: { type: "shoes", quantity: [0, 2] },
+  },
   { uid: "jaywalk", displayName: "jaywalking", description: "walking, but where you shouldn't" },
-  { uid: "chalk", displayName: "chalk vandalism", description: "eco friendly taggin", reqs: "chalk" },
-  { uid: "stayup", displayName: "staying up past bedtime", description: "mum is gonna be pissed when she finds out", net: "tired" },
+  { uid: "chalk", displayName: "chalk vandalism", description: "eco friendly taggin", req: { type: "chalk", quantity: 2 }, criminals: 2 },
+  {
+    uid: "stayup",
+    displayName: "staying up past bedtime",
+    description: "mum is gonna be pissed when she finds out",
+    net: ["tired", { type: "told off", quantity: 2 }],
+  },
 ];
 
 const modularContentData = [

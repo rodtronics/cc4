@@ -163,6 +163,11 @@ let inventory = new inventoryClass();
 //module init
 let moduleArray = [];
 moduleBuilder.start();
+
+for (let index = 0; index < moduleArray.length; index++) {
+  moduleArray[index].init();
+}
+
 // tab
 const tabDiv = document.getElementById("tabDivID");
 makePrimaryTabs(tabDiv);

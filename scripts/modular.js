@@ -629,8 +629,7 @@ const moduleBuilder = {
     for (let index = 0; index < gameMetadata.length; index++) {
       switch (gameMetadata[index].type) {
         case "staticCrime":
-          const instancesArray = gameMetadata[index].instances;
-          this.staticCrimeModule(instancesArray);
+          this.staticCrimeModule(staticCrimesData);
       }
     }
   },
@@ -670,44 +669,58 @@ const moduleBuilder = {
     const newDiv = this.createDiv("elementGroupProgressText");
     return newDiv;
   },
+  createCheckButtonDiv() {
+    const newDiv = this.createDiv("elementGroupCheckButton");
+    return newDiv;
+  },
 
-  staticCrimeModule(instancesArray) {
-    instancesArray = common.normaliseData(instancesArray);
-    for (let index = 0; index < instancesArray.length; index++) {
+  staticCrimeModule(staticCrimeDataSet) {
+    // instancesArray = common.normaliseData(instancesArray);
+    // for (let index = 0; index < instancesArray.length; index++) {
+
+    for (let index = 0; index < staticCrimeDataSet.length; index++) {
       // make a static crime
-      const uid = instancesArray[index];
-      const dataIndex = this.getDataIndexByUID("staticCrime", uid);
-      const data = staticCrimesData[dataIndex];
+
+      const dataSet = staticCrimeDataSet[index];
+      const uid = dataSet.uid;
       let newModule = new moduleClass("staticCrime", uid);
 
       // reference the dataset here, makes easy
-      newModule.dataSet = data;
+      newModule.dataSet = dataSet;
       // console.log(`static crime module: ${uid}  ${dataIndex}`);
 
       // create DIVs
       newModule.elements.container = this.createContainterDiv();
-      newModule.elements.header = this.createHeaderDiv(data.displayName);
+      newModule.elements.header = this.createHeaderDiv(dataSet.displayName);
       newModule.elements.subHeaderReq = this.createSubHeaderDiv();
       newModule.elements.subHeaderNet = this.createSubHeaderDiv();
       newModule.elements.progressBar = this.createProgressBarDiv();
+      newModule.elements.checkButton = this.createCheckButtonDiv();
       newModule.elements.progressText = this.createProgressTextDiv();
 
-      // add req and new
-      let reqHTML = "";
-      reqHTML += "requirements:";
-      if (data.reqs)
-        // set locations
-        newModule.elements.container.style.gridTemplateColumns = "repeat (4,1fr)";
+      // add req and new html
+      // const reqHTML = this.createReqNetHTML(newModule, "req");
+      // const netHTML = this.createReqNetHTML(newModule, "net");
+      // newModule.elements.subHeaderReq.innerHTML = reqHTML;
+      // newModule.elements.subHeaderNet.innerHTML = netHTML;
+
+      newModule.elements.checkButton.innerHTML = "<notoSymbol3>⮔</notoSymbol3>";
+      newModule.elements.checkButton.setAttribute("data-checkState", "off");
+
+      // set locations
+      newModule.elements.container.style.gridTemplateColumns = "repeat (4,1fr)";
       newModule.elements.container.style.gridTemplateRows = "1fr 1fr 1fr 1fr";
       newModule.elements.header.style.gridRow = "1";
       newModule.elements.header.style.gridColumn = "1 / span 4";
-      newModule.elements.subHeaderReq.style.gridRow = "2";
+      newModule.elements.subHeaderReq.style.gridRow = "4";
       newModule.elements.subHeaderReq.style.gridColumn = "1 / span 2";
-      newModule.elements.subHeaderNet.style.gridRow = "2";
+      newModule.elements.subHeaderNet.style.gridRow = "4";
       newModule.elements.subHeaderNet.style.gridColumn = "3 / span 2";
-      newModule.elements.progressBar.style.gridRow = "3";
-      newModule.elements.progressBar.style.gridColumn = "1 / span 4";
-      newModule.elements.progressText.style.gridRow = "4";
+      newModule.elements.progressBar.style.gridRow = "2";
+      newModule.elements.progressBar.style.gridColumn = "1 / span 3";
+      newModule.elements.checkButton.style.gridRow = "2";
+      newModule.elements.checkButton.style.gridColumn = "4";
+      newModule.elements.progressText.style.gridRow = "3";
       newModule.elements.progressText.style.gridColumn = "1 / span 4";
 
       // append
@@ -715,6 +728,7 @@ const moduleBuilder = {
       newModule.elements.container.appendChild(newModule.elements.subHeaderReq);
       newModule.elements.container.appendChild(newModule.elements.subHeaderNet);
       newModule.elements.container.appendChild(newModule.elements.progressBar);
+      newModule.elements.container.appendChild(newModule.elements.checkButton);
       newModule.elements.container.appendChild(newModule.elements.progressText);
 
       moduleArray.push(newModule);
@@ -737,6 +751,47 @@ const moduleBuilder = {
     }
     return -1;
   },
+  /**
+   * takes the dataset, and generates some html
+   * @param {*} dataSet array of objects
+   * @param {*} type "req" or "net" (anything except req is net)
+   * @returns html
+   */
+  createReqNetHTML(moduleObject, type) {
+    type = type == "req" ? "req" : "net";
+    let newHTML = "";
+    const personSymbol = "🯅";
+    // get number of criminals needed
+    criminals = moduleObject.dataSet.criminals ? dataSet.criminals : 1;
+
+    let localSet = [];
+
+    // set the text before going through the list
+    if (type == "req") {
+      newHTML += "<reqNet>required:<br>";
+      newHTML += `<notoSymbol3>${personSymbol.repeat(criminals)}</notoSymbol3><br>`;
+      localSet = moduleObject.dataSet.req ? common.normaliseData(dataSet.req) : null;
+    } else {
+      newHTML += "<reqNet>net:</reqNet><br>";
+      localSet = moduleObject.dataSet.net ? common.normaliseData(dataSet.net) : null;
+      // console.log(`net ${dataSet.net}`);
+    }
+    if (localSet) {
+      for (let index = 0; index < localSet.length; index++) {
+        localSet2 = localSet[index];
+        newHTML += `${localSet2.type}`;
+        if (localSet2.quantity > 1) {
+          newHTML += `${localSet2.quantity}`;
+        }
+        newHTML += `<br>`;
+      }
+    }
+
+    newHTML += `</reqNet>`;
+    // console.log(`${type}     ${localSet}`);
+    return newHTML;
+    //
+  },
 };
 
 class moduleClass {
@@ -745,11 +800,128 @@ class moduleClass {
     this.uid = uid;
     this.dataSet = undefined;
     this.state = undefined;
+    this.autoState = false;
     this.elements = {};
     this.data = {};
     this.data.visible = false;
-    this.display = {};
+    this.display = true;
+    this.req = [{}];
+    this.net = [{}];
   }
+
+  init() {
+    this.buildReqNet();
+    this.updateReqNet(true);
+    this.updateReqNet(false);
+    this.setEventHandlers();
+  }
+
+  setEventHandlers() {
+    this.elements.checkButton.addEventListener("click", () => this.toggleAutoState());
+  }
+
+  // run after initialisation, builds reqs and nets as normalised
+  // array in the object, so later can highlight if meets reqs
+  buildReqNet() {
+    // set up reqs. make null if none
+    if (this.dataSet.req == undefined) {
+      this.req = null;
+    } else {
+      // have determines reqs exist
+      // normalise
+      const localReqs = common.normaliseData(this.dataSet.req);
+      // if just single word and not object, set reqs as single length
+      // array with that data
+      for (let index = 0; index < localReqs.length; index++) {
+        if (typeof localReqs[index] == "string") {
+          this.req[index].type = localReqs[index];
+          this.req[index].quantity = 1;
+        } else {
+          this.req[index] = {};
+          this.req[index].type = localReqs[index].type;
+          this.req[index].quantity = localReqs[index].quantity;
+        }
+      }
+    }
+
+    // bad practice I am sure but I've just copied and pasted but chanegd from req to net
+    if (this.dataSet.net == undefined) {
+      this.net = null;
+    } else {
+      // have determines reqs exist
+      // normalise
+      const localNets = common.normaliseData(this.dataSet.net);
+      // if just single word and not object, set reqs as single length
+      // array with that data
+
+      for (let index = 0; index < localNets.length; index++) {
+        if (typeof localNets[index] == "string") {
+          this.net[index].type = localNets[index];
+          this.net[index].quantity = 1;
+        } else {
+          this.net[index] = {};
+          this.net[index].type = localNets[index].type;
+          this.net[index].quantity = localNets[index].quantity;
+        }
+      }
+    }
+  }
+
+  updateReqNet(type) {
+    type = type == true ? "req" : "net";
+    let newHTML = "";
+    const personSymbol = "🯅";
+    // get number of criminals needed
+    let criminals = this.dataSet.criminals ? this.dataSet.criminals : 1;
+
+    let localSet = [];
+
+    // set the text before going through the list
+    if (type == "req") {
+      newHTML += "<reqNet>required:<br>";
+      newHTML += `<notoSymbol3>${personSymbol.repeat(criminals)}</notoSymbol3><br>`;
+      newHTML += `<minusLineHeight></minusLineHeight>`;
+      localSet = this.req ? this.req : null;
+    } else {
+      newHTML += "<reqNet>net:</reqNet><br>";
+      localSet = this.net ? this.net : null;
+    }
+
+    if (localSet) {
+      for (let index = 0; index < localSet.length; index++) {
+        let localSet2 = localSet[index];
+        // console.log(this.dataSet.net);
+        // console.log(`${this.uid} ${localSet2.type}`);
+        if (localSet2.type == undefined) console.log(localSet2);
+        newHTML += `${localSet2.type}`;
+
+        if (Array.isArray(localSet2.quantity)) {
+          newHTML += ` x${localSet2.quantity[0]}-${localSet2.quantity[1]}`;
+        } else {
+          newHTML += localSet2.quantity == 1 ? "" : " x" + localSet2.quantity;
+        }
+
+        newHTML += `<br>`;
+      }
+    }
+    newHTML += `</reqNet>`;
+    if (type == "req") {
+      this.elements.subHeaderReq.innerHTML = newHTML;
+    } else {
+      this.elements.subHeaderNet.innerHTML = newHTML;
+    }
+  }
+
+  toggleAutoState() {
+    if (this.autoState == false) {
+      this.elements.checkButton.setAttribute("data-checkState", "on");
+      this.autoState = true;
+    } else {
+      this.elements.checkButton.setAttribute("data-checkState", "off");
+      this.autoState = false;
+    }
+  }
+
   /**
    * this asks the module to redraw
    * idea is this is called every anim frame, just to redraw the gfx
