@@ -179,8 +179,10 @@ for (let index = 0; index < moduleArray.length; index++) {
 
 // game loop
 function animationGameLoop() {
-  for (let index = 0; index < moduleArray.length; index++) {
-    moduleArray[index].redraw();
+  if (activeTab == 0) {
+    for (let index = 0; index < moduleArray.length; index++) {
+      moduleArray[index].redraw();
+    }
   }
 
   window.requestAnimationFrame(animationGameLoop);

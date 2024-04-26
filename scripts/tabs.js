@@ -23,7 +23,9 @@ function makePrimaryTabs(divToAppendTo) {
   }
 }
 
+let activeTab = 0;
 function setActiveTab(tabIndex) {
+  activeTab = tabIndex;
   // turn off all tabs
   for (let index = 0; index < primaryTabs.length; index++) {
     primaryTabs[index].element.setAttribute("data-tabState", "inactive");
@@ -37,6 +39,9 @@ function setActiveTab(tabIndex) {
   for (let index = 0; index < moduleArray.length; index++) {
     if (tabIndex == 0 && moduleArray[index].type == "staticCrime") {
       global.bodyDiv.appendChild(moduleArray[index].elements.container);
+    } else if (tabIndex == 1) {
+      global.bodyDiv.appendChild(inventory.elements.container);
+      inventory.refreshDisplay();
     }
   }
 }

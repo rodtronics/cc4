@@ -538,80 +538,6 @@ class playerDataClass {
   }
 }
 
-class inventoryClass {
-  constructor() {
-    this.inventory = [];
-    for (let index = 0; index < inventoryData.length; index++) {
-      this.inventory[index] = {};
-      this.inventory[index].type = inventoryData[index].type;
-      this.inventory[index].quantity = 0;
-      this.inventory[index].quantityCumulative = 0;
-    }
-  }
-  checkInventory(type) {
-    const index = this.getIndexByType(type);
-    if (index == null || index == -1) return index;
-    return this.inventory[index].quantity;
-  }
-  /**
-   * this is passed an array of objects (or they're normalised into an array)
-   * and adds them, and allows for variable amounts
-   * @param {array} yieldArray
-   */
-  addInventoryByArray(yieldArray) {
-    yieldArray = common.normaliseData(yieldArray);
-    for (let index = 0; index < yieldArray.length; index++) {
-      const type = yieldArray[index].type;
-      const quantityArray = common.normaliseData(yieldArray[index].quantity);
-      let finalQuantity = 0;
-      if (quantityArray[1]) {
-        const min = Math.min(quantityArray[0], quantityArray[1]);
-        const max = Math.max(quantityArray[0], quantityArray[1]);
-        const random = Math.random();
-        const diff = Math.abs(max - min);
-        finalQuantity = Math.round(random * diff + min);
-      } else {
-        finalQuantity = quantityArray[0];
-      }
-      this.addInventoryByType(type, finalQuantity);
-      // console.log(inventoryIndex);
-    }
-  }
-  /**
-   * this method doesn't allow for arrays of amounts
-   * @param {string} type
-   * @param {number} amount
-   * @returns null if bad input and -1 if can't find index
-   */
-  addInventoryByType(type, amount) {
-    const index = this.getIndexByType(type);
-    if (index == null || index == -1) return index;
-    if (type == "money") {
-      player.addMoney(amount);
-    }
-    this.inventory[index].quantity += amount;
-    this.inventory[index].quantityCumulative += amount;
-    console.log(`Inventory: ${type} +${amount}`);
-  }
-  subInventory(type, amount) {
-    const index = this.getIndexByType(type);
-    if (index == null || index == -1) return index;
-    if (this.inventory[index].quantity < amount) return "notEnough";
-    this.inventory[index].quantity -= amount;
-    console.log(`Inventory: ${type} -${amount}`);
-    return this.inventory[index].quantity;
-  }
-  getIndexByType(type) {
-    if (!type) return null;
-    for (let index = 0; index < inventoryData.length; index++) {
-      if (inventoryData[index].type == type) {
-        return index;
-      }
-    }
-    return -1;
-  }
-}
-
 class criminalsClass {
   constructor() {
     this.number = 1;
@@ -670,8 +596,17 @@ const moduleBuilder = {
     return newDiv;
   },
   createCheckButtonDiv() {
-    const newDiv = this.createDiv("elementGroupCheckButton");
+    const newDiv = this.createDiv(["elementGroupCheckButton", "elementGroupButton"]);
     return newDiv;
+  },
+  createDoButtonDiv() {
+    const newDiv = this.createDiv(["elementGroupDoButton", "elementGroupButton"]);
+    return newDiv;
+  },
+
+  createInventorySubHeader(displayName) {
+    const newDiv = this.createDiv("inventorySubHeader");
+    newDiv.innerText = displayName;
   },
 
   staticCrimeModule(staticCrimeDataSet) {
@@ -696,6 +631,7 @@ const moduleBuilder = {
       newModule.elements.subHeaderNet = this.createSubHeaderDiv();
       newModule.elements.progressBar = this.createProgressBarDiv();
       newModule.elements.checkButton = this.createCheckButtonDiv();
+      newModule.elements.doButton = this.createDoButtonDiv();
       newModule.elements.progressText = this.createProgressTextDiv();
 
       // add req and new html
@@ -707,10 +643,12 @@ const moduleBuilder = {
       newModule.elements.checkButton.innerHTML = "<notoSymbol3>⮔</notoSymbol3>";
       newModule.elements.checkButton.setAttribute("data-checkState", "off");
 
+      newModule.elements.doButton.innerHTML = "<notoSymbol3>🢅</notoSymbol3>";
+
       newModule.elements.subHeaderNet.classList.add("borderLeft");
 
       // set locations
-      newModule.elements.container.style.gridTemplateColumns = "repeat (4,1fr)";
+      newModule.elements.container.style.gridTemplateColumns = "1fr 2fr 2fr 1fr";
       newModule.elements.container.style.gridTemplateRows = "1fr 1fr 1fr 1fr";
       newModule.elements.header.style.gridRow = "1";
       newModule.elements.header.style.gridColumn = "1 / span 4";
@@ -719,9 +657,11 @@ const moduleBuilder = {
       newModule.elements.subHeaderNet.style.gridRow = "4";
       newModule.elements.subHeaderNet.style.gridColumn = "3 / span 2";
       newModule.elements.progressBar.style.gridRow = "2";
-      newModule.elements.progressBar.style.gridColumn = "1 / span 3";
+      newModule.elements.progressBar.style.gridColumn = "2 / span 2";
       newModule.elements.checkButton.style.gridRow = "2";
-      newModule.elements.checkButton.style.gridColumn = "4";
+      newModule.elements.checkButton.style.gridColumn = "1";
+      newModule.elements.doButton.style.gridRow = "2";
+      newModule.elements.doButton.style.gridColumn = "4";
       newModule.elements.progressText.style.gridRow = "3";
       newModule.elements.progressText.style.gridColumn = "1 / span 4";
 
@@ -731,6 +671,7 @@ const moduleBuilder = {
       newModule.elements.container.appendChild(newModule.elements.subHeaderNet);
       newModule.elements.container.appendChild(newModule.elements.progressBar);
       newModule.elements.container.appendChild(newModule.elements.checkButton);
+      newModule.elements.container.appendChild(newModule.elements.doButton);
       newModule.elements.container.appendChild(newModule.elements.progressText);
 
       moduleArray.push(newModule);
@@ -815,6 +756,7 @@ class moduleClass {
 
   init() {
     this.buildReqNet();
+    this.data.durationMS = this.dataSet.durationMS ? this.dataSet.durationMS : 10000;
     this.updateReqNet(true);
     this.updateReqNet(false);
     this.setEventListeners();
@@ -822,7 +764,7 @@ class moduleClass {
 
   setEventListeners() {
     this.elements.checkButton.addEventListener("click", () => this.toggleAutoState());
-    this.elements.header.addEventListener("click", () => this.startStop());
+    this.elements.doButton.addEventListener("click", () => this.startStop());
   }
 
   // run after initialisation, builds reqs and nets as normalised
@@ -895,7 +837,8 @@ class moduleClass {
     if (localSet) {
       for (let index = 0; index < localSet.length; index++) {
         let localSet2 = localSet[index];
-        newHTML += `${localSet2.type}`;
+        const displayName = localSet2.displayName ? localSet2.displayName : localSet2.type;
+        newHTML += `${displayName}`;
 
         if (Array.isArray(localSet2.quantity)) {
           newHTML += ` x${localSet2.quantity[0]}-${localSet2.quantity[1]}`;
@@ -932,17 +875,32 @@ class moduleClass {
    * @param {boolean} force
    */
   redraw(force) {
+    if (force == "clear") {
+      this.elements.progressBar.style.background = "";
+      return;
+    }
     if (force == true || this.state == "running") {
       // logic for redrawing progress bars
       // and numbers
+      // progress bar
       const progress = this.calcProgress();
       const newProgressCss = common.cssProgressBar(progress);
       this.elements.progressBar.style.background = newProgressCss;
+      const msLeftText = this.msLeft(true);
+      this.elements.progressText.innerText = msLeftText;
     }
   }
+
   calcProgress() {
-    const durationMS = this.dataSet.durationMS ? this.dataSet.durationMS : 10000;
-    return this.data.progress / durationMS;
+    return this.data.progress / this.data.durationMS;
+  }
+
+  msLeft(format) {
+    const msLeft = this.data.durationMS - this.data.progress;
+    if (format == true) {
+      return common.formatTime(msLeft);
+    }
+    return msLeft;
   }
 
   startStop() {
@@ -953,27 +911,29 @@ class moduleClass {
         break;
       case "virgin":
       case "paused":
-
       case "completed":
-        setInterval(() => this.running(), global.refreshRate);
+        this.intervalTimer = setInterval(() => this.running(), global.refreshRate);
         this.state = "running";
         break;
     }
   }
 
   running() {
-    this.progress += global.refreshRate;
-    if (this.progress > this.dataSet.durationMS) {
+    this.data.progress += global.refreshRate;
+    if (this.data.progress > this.data.durationMS) {
       this.completed();
     }
   }
 
   completed() {
-    this.progress = 0;
-    if (this.toggleAutoState == true) {
+    this.data.progress = 0;
+    if (this.net) inventory.addInventoryByArray(this.net);
+    if (this.autoState == true) {
     } else {
       clearInterval(this.intervalTimer);
       this.state = "completed";
+      this.redraw("clear");
+      this.elements.progressText.innerText = "complete";
     }
   }
 }

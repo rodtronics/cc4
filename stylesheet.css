@@ -46,6 +46,8 @@ notoSymbol3 {
   font-family: "Noto Sans Symbols 2", sans-serif;
   font-size: 1.5em;
   /* line-height: 1em; */
+  position: relative;
+  top: 3px;
 }
 
 minusLineHeight {
@@ -325,7 +327,7 @@ reqNet {
 }
 
 .elementGroupCheckButton {
-  text-align: center;
+  text-shadow: 1px 1px 1px var(--dark);
 }
 
 .elementGroupCheckButton[data-checkState="off"] {
@@ -337,6 +339,54 @@ reqNet {
 }
 .elementGroupCheckButton:hover {
   text-shadow: 0 0 5px var(--rainbow-E);
+}
+
+.elementGroupButton {
+  position: relative;
+  top: -7px;
+  padding: 5px;
+  text-align: center;
+}
+.elementGroupDoButton:hover {
+  color: var(--rainbow-E);
+}
+
+.inventoryContainer {
+  display: flex;
+  flex-direction: column;
+  height: auto;
+}
+
+.inventoryHeader:hover {
+  background: var(--rainbow-D);
+}
+
+.inventorySubContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.inventoryItemContainer {
+  border-style: var(--darkAlpha);
+  border-color: white;
+  border-width: 2px 0 0 0;
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+}
+
+.inventoryItemContainer:hover {
+  background: var(--rainbow-E_bright);
+}
+
+.inventoryItemHeader {
+  padding: 5px;
+  grid-column: 1;
+}
+
+.inventoryQuantityBox {
+  padding: 5px;
+  text-align: right;
+  grid-column: 2;
 }
 
 .elementGroupCounter {
