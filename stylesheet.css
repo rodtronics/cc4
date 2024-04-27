@@ -96,6 +96,7 @@ reqNet {
   padding: 5px 10px;
   font-size: 1.2em;
   text-align: center;
+  line-height: 0.9em;
 }
 #tabDivID {
   grid-column: 3;

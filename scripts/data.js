@@ -71,9 +71,9 @@ let constructionDataObject = {
 
 const staticCrimesData = [
   {
-    uid: "stealshoe",
-    displayName: "stealing shoes",
-    net: { type: "shoes", quantity: [0, 2] },
+    uid: "stealchalk",
+    displayName: "stealing chalk",
+    net: { type: "chalk", quantity: 1 },
     durationMS: 2000,
   },
   { uid: "jaywalk", displayName: "jaywalking", description: "walking, but where you shouldn't", durationMS: 2000, net: "money" },

@@ -13,11 +13,6 @@ let global = {
   precision: 4, // precision on floats
   bodyDiv: document.getElementById("bodyDivID"),
   infoDiv: document.getElementById("infoDivID"),
-
-  updateMoney() {
-    let money = player.money.toFixed(0).toLocaleString();
-    this.infoDiv.innerHTML = `$${money}`;
-  },
 };
 
 const common = {

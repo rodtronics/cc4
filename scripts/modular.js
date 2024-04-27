@@ -522,25 +522,47 @@ class modularGenericElementGroup {
 
 class playerDataClass {
   constructor() {
+    this.basicCriminals = {};
+    this.basicCriminals.total = 5;
+    this.basicCriminals.available = 5;
     this.money = 0;
     this.moneyCumulative = 0;
     this.dateTimeStarted = dayjs();
+    (this.personSymbol = "🯅"), this.updateMoney();
   }
   addMoney(amount) {
     this.money += amount;
     this.moneyCumulative += amount;
-    global.updateMoney();
+    this.updateMoney();
   }
   subMoney(amount) {
     if (this.money < amount) return -1;
     this.money -= amount;
-    global.updateMoney();
+    this.updateMoney();
   }
-}
-
-class criminalsClass {
-  constructor() {
-    this.number = 1;
+  takeCriminal(quantity) {
+    quantity = quantity ? quantity : 1;
+    this.basicCriminals.available -= quantity;
+    this.basicCriminals.available < 0 ? 0 : this.basicCriminals.available;
+    this.updateMoney();
+  }
+  returnCriminal(quantity) {
+    quantity = quantity ? quantity : 1;
+    this.basicCriminals.available += quantity;
+    this.basicCriminals.available > this.basicCriminals.total ? this.basicCriminals.total : this.basicCriminals.available;
+    this.updateMoney();
+  }
+  availabilityCSS() {
+    let newCSS = "";
+    newCSS += ``;
+    newCSS += `${this.basicCriminals.available}<notoSymbol2>${this.personSymbol}</notoSymbol2>`;
+    newCSS += `/${this.basicCriminals.total}<notoSymbol2>${this.personSymbol}</notoSymbol2>`;
+    return newCSS;
+  }
+  updateMoney() {
+    const money = this.money.toFixed(0).toLocaleString();
+    const availabilityCSS = this.availabilityCSS();
+    global.infoDiv.innerHTML = `$${money}<br>${availabilityCSS}`;
   }
 }
 
@@ -712,7 +734,7 @@ const moduleBuilder = {
     // set the text before going through the list
     if (type == "req") {
       newHTML += "<reqNet>required:<br>";
-      newHTML += `<notoSymbol3>${personSymbol.repeat(criminals)}</notoSymbol3><br>`;
+      newHTML += `<notoSymbol3>${player.personSymbol.repeat(criminals)}</notoSymbol3><br>`;
       localSet = moduleObject.dataSet.req ? common.normaliseData(dataSet.req) : null;
     } else {
       newHTML += "<reqNet>net:</reqNet><br>";
@@ -770,6 +792,9 @@ class moduleClass {
   // run after initialisation, builds reqs and nets as normalised
   // array in the object, so later can highlight if meets reqs
   buildReqNet() {
+    if (!this.dataSet.criminals) {
+      this.dataSet.criminals = 1;
+    }
     // set up reqs. make null if none
     if (this.dataSet.req == undefined) {
       this.req = null;
@@ -817,7 +842,6 @@ class moduleClass {
   updateReqNet(type) {
     type = type == true ? "req" : "net";
     let newHTML = "";
-    const personSymbol = "🯅";
     // get number of criminals needed
     let criminals = this.dataSet.criminals ? this.dataSet.criminals : 1;
 
@@ -826,7 +850,7 @@ class moduleClass {
     // set the text before going through the list
     if (type == "req") {
       newHTML += "<reqNet>required:<br>";
-      newHTML += `<notoSymbol3>${personSymbol.repeat(criminals)}</notoSymbol3><br>`;
+      newHTML += `<notoSymbol3>${player.personSymbol.repeat(criminals)}</notoSymbol3><br>`;
       newHTML += `<minusLineHeight></minusLineHeight>`;
       localSet = this.req ? this.req : null;
     } else {
@@ -854,6 +878,45 @@ class moduleClass {
       this.elements.subHeaderReq.innerHTML = newHTML;
     } else {
       this.elements.subHeaderNet.innerHTML = newHTML;
+    }
+  }
+
+  checkReqs() {
+    // enough criminals
+    const criminalsNeeded = this.dataSet.criminals;
+    const criminalsAvailable = player.basicCriminals.criminalsAvailable;
+    if (criminalsAvailable < criminalsNeeded) return "not enough people";
+    // if no reqs then all god
+    if (!this.req) return "met";
+    for (let index = 0; index < this.req.length; index++) {
+      const reqType = this.req[index].type;
+      const reqQuantity = this.req[index].quantity;
+      const checkedInventory = inventory.checkInventory(reqType);
+      if (checkedInventory < reqQuantity) return `not enough ${reqType}`;
+    }
+    return "met";
+  }
+
+  checkCriminalReqs() {
+    const criminalsNeeded = this.dataSet.criminals;
+    const criminalsAvailable = player.basicCriminals.available;
+    console.log(`crim chek ${criminalsNeeded}   ${criminalsAvailable}`);
+    if (criminalsAvailable < criminalsNeeded) return "not enough people";
+    return "met";
+  }
+
+  removeReqs(force) {
+    const checkReq = this.checkReqs();
+    if (checkReq != "met" || force) {
+      console.log(`${checkReq}   ${!force}`);
+      return "reqs not met. pass true in the argument to force";
+    }
+    if (this.dataSet.req) {
+      console.log("there are reqs");
+
+      const passedData = common.normaliseData(this.dataSet.req);
+      console.log(passedData);
+      inventory.subInventoryByArray(passedData);
     }
   }
 
@@ -904,18 +967,44 @@ class moduleClass {
   }
 
   startStop() {
+    const criminalReqs = this.checkCriminalReqs();
+
     switch (this.state) {
       case "running":
         this.state = "paused";
         clearInterval(this.intervalTimer);
+        player.returnCriminal(this.dataSet.criminals);
+        break;
+      case "paused":
+        // if it's been paused, the criminals have been returned
+        // but I don't need to remove the items;
+        if (criminalReqs != "met") {
+          this.elements.progressText.innerText = "not enough people";
+          return;
+        }
+        this.run();
         break;
       case "virgin":
-      case "paused":
       case "completed":
-        this.intervalTimer = setInterval(() => this.running(), global.refreshRate);
-        this.state = "running";
+        if (criminalReqs != "met") {
+          this.elements.progressText.innerText = "not enough people";
+          return;
+        }
+        this.run();
         break;
     }
+  }
+
+  run() {
+    const reqCheck = this.checkReqs();
+    if (reqCheck != "met") {
+      this.elements.progressText.innerText = "reqs not met";
+      return;
+    }
+    this.removeReqs();
+    player.takeCriminal(this.dataSet.criminals);
+    this.intervalTimer = setInterval(() => this.running(), global.refreshRate);
+    this.state = "running";
   }
 
   running() {
@@ -926,14 +1015,34 @@ class moduleClass {
   }
 
   completed() {
+    // reset progress
     this.data.progress = 0;
-    if (this.net) inventory.addInventoryByArray(this.net);
-    if (this.autoState == true) {
-    } else {
-      clearInterval(this.intervalTimer);
-      this.state = "completed";
-      this.redraw("clear");
-      this.elements.progressText.innerText = "complete";
+    // give net
+    if (this.net) {
+      inventory.addInventoryByArray(this.net);
     }
+    // check autostate for auto restart
+    if (this.autoState == true) {
+      // check reqs again
+      const checkReqs = this.checkReqs();
+      if (checkReqs != "met") {
+        this.toggleAutoState();
+        this.stop("reqs not met for restart");
+        return;
+      }
+      this.removeReqs();
+    } else {
+      // if no autorestart
+      this.stop();
+    }
+  }
+
+  stop(innerText) {
+    innerText = innerText ? innerText : "complete";
+    clearInterval(this.intervalTimer);
+    this.state = "completed";
+    this.redraw("clear");
+    this.elements.progressText.innerText = innerText;
+    player.returnCriminal(this.dataSet.criminals);
   }
 }

@@ -57,14 +57,21 @@ class inventoryClass {
     console.log(`Inventory: ${type} +${amount}`);
     this.refreshDisplay();
   }
-  subInventory(type, amount) {
+  subInventoryByArray(array) {
+    console.log(array);
+    for (let index = 0; index < array.length; index++) {
+      const element = array[index];
+      const answer = this.subInventory(element.type, element.quantity);
+    }
+  }
+  subInventory(type, quantity) {
     const index = this.getIndexByType(type);
     if (index == null || index == -1) return index;
-    if (this.inventory[index].quantity < amount) return "notEnough";
-    this.inventory[index].quantity -= amount;
-    console.log(`Inventory: ${type} -${amount}`);
-    return this.inventory[index].quantity;
+    if (this.inventory[index].quantity < quantity) return "notEnough";
+    this.inventory[index].quantity -= quantity;
+    console.log(`Inventory: ${type} -${quantity}`);
     this.refreshDisplay();
+    return this.inventory[index].quantity;
   }
   getIndexByType(type) {
     if (!type) return null;
