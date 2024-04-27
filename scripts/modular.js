@@ -520,52 +520,6 @@ class modularGenericElementGroup {
   }
 }
 
-class playerDataClass {
-  constructor() {
-    this.basicCriminals = {};
-    this.basicCriminals.total = 5;
-    this.basicCriminals.available = 5;
-    this.money = 0;
-    this.moneyCumulative = 0;
-    this.dateTimeStarted = dayjs();
-    (this.personSymbol = "🯅"), this.updateMoney();
-  }
-  addMoney(amount) {
-    this.money += amount;
-    this.moneyCumulative += amount;
-    this.updateMoney();
-  }
-  subMoney(amount) {
-    if (this.money < amount) return -1;
-    this.money -= amount;
-    this.updateMoney();
-  }
-  takeCriminal(quantity) {
-    quantity = quantity ? quantity : 1;
-    this.basicCriminals.available -= quantity;
-    this.basicCriminals.available < 0 ? 0 : this.basicCriminals.available;
-    this.updateMoney();
-  }
-  returnCriminal(quantity) {
-    quantity = quantity ? quantity : 1;
-    this.basicCriminals.available += quantity;
-    this.basicCriminals.available > this.basicCriminals.total ? this.basicCriminals.total : this.basicCriminals.available;
-    this.updateMoney();
-  }
-  availabilityCSS() {
-    let newCSS = "";
-    newCSS += ``;
-    newCSS += `${this.basicCriminals.available}<notoSymbol2>${this.personSymbol}</notoSymbol2>`;
-    newCSS += `/${this.basicCriminals.total}<notoSymbol2>${this.personSymbol}</notoSymbol2>`;
-    return newCSS;
-  }
-  updateMoney() {
-    const money = this.money.toFixed(0).toLocaleString();
-    const availabilityCSS = this.availabilityCSS();
-    global.infoDiv.innerHTML = `$${money}<br>${availabilityCSS}`;
-  }
-}
-
 /**
  * this is the new one
  */
@@ -849,9 +803,14 @@ class moduleClass {
 
     // set the text before going through the list
     if (type == "req") {
-      newHTML += "<reqNet>required:<br>";
-      newHTML += `<notoSymbol3>${player.personSymbol.repeat(criminals)}</notoSymbol3><br>`;
-      newHTML += `<minusLineHeight></minusLineHeight>`;
+      newHTML += "<reqNet>required:<br></reqNet>";
+      console.log(criminals);
+      if (criminals < 6) {
+        newHTML += `<notoSymbol3>${player.personSymbol.repeat(criminals)}</notoSymbol3><br>`;
+      } else {
+        newHTML += `<notoSymbol3>${player.personSymbol}</notoSymbol3>x${criminals}<br>`;
+      }
+
       localSet = this.req ? this.req : null;
     } else {
       newHTML += "<reqNet>net:</reqNet><br>";
@@ -862,18 +821,24 @@ class moduleClass {
       for (let index = 0; index < localSet.length; index++) {
         let localSet2 = localSet[index];
         const displayName = localSet2.displayName ? localSet2.displayName : localSet2.type;
-        newHTML += `${displayName}`;
+        const quantity = localSet2.quantity ? localSet2.quantity : 1;
 
-        if (Array.isArray(localSet2.quantity)) {
-          newHTML += ` x${localSet2.quantity[0]}-${localSet2.quantity[1]}`;
+        if (localSet2.type == "criminal") {
+          newHTML += `<notoSymbol3>${player.personSymbol.repeat(quantity)}</notosymbol3>`;
+        } else if (localSet2.type == "money") {
+          newHTML += `$${quantity}`;
         } else {
-          newHTML += localSet2.quantity == 1 ? "" : " x" + localSet2.quantity;
+          newHTML += `${displayName}`;
+          if (Array.isArray(localSet2.quantity)) {
+            newHTML += ` x${localSet2.quantity[0]}-${localSet2.quantity[1]}`;
+          } else {
+            newHTML += localSet2.quantity == 1 ? "" : " x" + localSet2.quantity;
+          }
         }
 
         newHTML += `<br>`;
       }
     }
-    newHTML += `</reqNet>`;
     if (type == "req") {
       this.elements.subHeaderReq.innerHTML = newHTML;
     } else {
@@ -900,7 +865,6 @@ class moduleClass {
   checkCriminalReqs() {
     const criminalsNeeded = this.dataSet.criminals;
     const criminalsAvailable = player.basicCriminals.available;
-    console.log(`crim chek ${criminalsNeeded}   ${criminalsAvailable}`);
     if (criminalsAvailable < criminalsNeeded) return "not enough people";
     return "met";
   }
@@ -1020,9 +984,12 @@ class moduleClass {
     // give net
     if (this.net) {
       inventory.addInventoryByArray(this.net);
+      player.updateMoney();
     }
     // check autostate for auto restart
     if (this.autoState == true) {
+      player.updateMoney();
+
       // check reqs again
       const checkReqs = this.checkReqs();
       if (checkReqs != "met") {
@@ -1031,6 +998,7 @@ class moduleClass {
         return;
       }
       this.removeReqs();
+      player.updateMoney();
     } else {
       // if no autorestart
       this.stop();
@@ -1044,5 +1012,6 @@ class moduleClass {
     this.redraw("clear");
     this.elements.progressText.innerText = innerText;
     player.returnCriminal(this.dataSet.criminals);
+    player.updateMoney();
   }
 }

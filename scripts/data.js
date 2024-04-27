@@ -69,14 +69,22 @@ let constructionDataObject = {
   },
 };
 
+/**
+ * required properties
+ * uid
+ * pretty much everything will default other than that
+ */
 const staticCrimesData = [
   {
     uid: "stealchalk",
     displayName: "stealing chalk",
-    net: { type: "chalk", quantity: 1 },
+    net: [
+      { type: "chalk", quantity: 1 },
+      { type: "money", quantity: 4 },
+    ],
     durationMS: 2000,
   },
-  { uid: "jaywalk", displayName: "jaywalking", description: "walking, but where you shouldn't", durationMS: 2000, net: "money" },
+  { uid: "jaywalk", displayName: "jaywalking", description: "walking, but where you shouldn't", durationMS: 2000, req: "money", net: "criminal" },
   {
     uid: "fashion",
     displayName: "fashion crime",
@@ -92,6 +100,23 @@ const staticCrimesData = [
     description: "mum is gonna be pissed when she finds out",
     net: ["tired", { type: "told off", quantity: 2 }],
   },
+  { uid: "stealcar", displayName: "grand theft auto", description: "", durationMS: 10000, net: "vehicle", criminals: 7 },
+  { uid: "sellcar", displayName: "sell stolen car", description: "", durationMS: 10000, req: "vehicle", net: { type: "money", quantity: 57 } },
+  { uid: "", displayName: "", description: "", durationMS: 10000 },
+  { uid: "", displayName: "", description: "", durationMS: 10000 },
+  { uid: "", displayName: "", description: "", durationMS: 10000 },
+  { uid: "", displayName: "", description: "", durationMS: 10000 },
+  { uid: "", displayName: "", description: "", durationMS: 10000 },
+  { uid: "", displayName: "", description: "", durationMS: 10000 },
+  { uid: "", displayName: "", description: "", durationMS: 10000 },
+  { uid: "", displayName: "", description: "", durationMS: 10000 },
+  { uid: "", displayName: "", description: "", durationMS: 10000 },
+  { uid: "", displayName: "", description: "", durationMS: 10000 },
+  { uid: "", displayName: "", description: "", durationMS: 10000 },
+  { uid: "", displayName: "", description: "", durationMS: 10000 },
+  { uid: "", displayName: "", description: "", durationMS: 10000 },
+  { uid: "", displayName: "", description: "", durationMS: 10000 },
+  { uid: "", displayName: "", description: "", durationMS: 10000 },
 ];
 
 const modularContentData = [
@@ -181,8 +206,8 @@ const inventoryData = [
   { type: "told off", displayName: "told off", description: "feels stick bro", saleValue: 0 },
   { type: "kidcred", displayName: "street cred with children", description: "", saleValue: 0 },
   { type: "shame", displayName: "shame", description: "", saleValue: 0 },
-  { type: "", displayName: "", description: "", saleValue: 0 },
-  { type: "", displayName: "", description: "", saleValue: 0 },
+  { type: "criminal", displayName: "criminal", description: "", saleValue: 0 },
+  { type: "vehicle", displayName: "vehicle", description: "", saleValue: 0 },
   { type: "", displayName: "", description: "", saleValue: 0 },
   { type: "", displayName: "", description: "", saleValue: 0 },
   { type: "", displayName: "", description: "", saleValue: 0 },

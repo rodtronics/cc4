@@ -195,7 +195,8 @@ reqNet {
   );
   background: repeating-linear-gradient(-45deg, white 0px, white 20px, var(--dark) 20px, var(--dark) 40px);
 
-  min-height: 94vh;
+  height: 94vh;
+  overflow-y: scroll;
 }
 
 .elementGroup {
@@ -567,4 +568,23 @@ reqNet {
   border-width: 10px;
   color: var(--dark);
   border-radius: 10px;
+}
+
+/* width */
+
+::-webkit-scrollbar {
+  width: 3px;
+}
+
+/* Track */
+
+::-webkit-scrollbar-track {
+  background: var(--dark);
+}
+
+/* Handle */
+
+::-webkit-scrollbar-thumb {
+  background: var(--rainbow-E_bright);
+  background: white;
 }

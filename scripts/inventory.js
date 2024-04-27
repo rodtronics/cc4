@@ -43,18 +43,24 @@ class inventoryClass {
   /**
    * this method doesn't allow for arrays of amounts
    * @param {string} type
-   * @param {number} amount
+   * @param {number} quantity
    * @returns null if bad input and -1 if can't find index
    */
-  addInventoryByType(type, amount) {
+  addInventoryByType(type, quantity) {
     const index = this.getIndexByType(type);
     if (index == null || index == -1) return index;
     if (type == "money") {
-      player.addMoney(amount);
+      player.addMoney(quantity);
     }
-    this.inventory[index].quantity += amount;
-    this.inventory[index].quantityCumulative += amount;
-    console.log(`Inventory: ${type} +${amount}`);
+    if (type == "criminal") {
+      player.addNewCriminal(quantity);
+      this.refreshDisplay();
+      console.log(`${quantity} criminals added`);
+      return;
+    }
+    this.inventory[index].quantity += quantity;
+    this.inventory[index].quantityCumulative += quantity;
+    console.log(`Inventory: ${type} +${quantity}`);
     this.refreshDisplay();
   }
   subInventoryByArray(array) {
@@ -65,6 +71,9 @@ class inventoryClass {
     }
   }
   subInventory(type, quantity) {
+    if (type == "money") {
+      player.addMoney(quantity);
+    }
     const index = this.getIndexByType(type);
     if (index == null || index == -1) return index;
     if (this.inventory[index].quantity < quantity) return "notEnough";
@@ -120,7 +129,10 @@ class inventoryClass {
     for (let index = 0; index < inventoryData.length; index++) {
       if (this.inventory[index].quantity > 0) {
         this.elements.subContainer.appendChild(this.inventory[index].subElements.itemContainer);
-        this.inventory[index].subElements.quantityBox.innerText = this.inventory[index].quantity;
+        let quantity = "";
+        if (this.inventory[index].type == "money") quantity += "$";
+        quantity += this.inventory[index].quantity;
+        this.inventory[index].subElements.quantityBox.innerText = quantity;
       }
     }
   }

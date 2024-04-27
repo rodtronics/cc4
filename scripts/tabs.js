@@ -36,6 +36,8 @@ function setActiveTab(tabIndex) {
 
   clearElements();
   // then display the relevant icons
+  global.bodyDiv.appendChild(inventory.elements.container);
+  inventory.refreshDisplay();
   for (let index = 0; index < moduleArray.length; index++) {
     if (tabIndex == 0 && moduleArray[index].type == "staticCrime") {
       global.bodyDiv.appendChild(moduleArray[index].elements.container);
