@@ -136,6 +136,10 @@ let player = new playerDataClass();
 // inventory init
 let inventory = new inventoryClass();
 inventory.refreshDisplay();
+
+// clean up data
+staticCrimeDataClean();
+
 //module init
 let moduleArray = [];
 moduleBuilder.start();

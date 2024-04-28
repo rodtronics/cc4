@@ -74,7 +74,7 @@ let constructionDataObject = {
  * uid
  * pretty much everything will default other than that
  */
-const staticCrimesData = [
+let staticCrimesData = [
   {
     uid: "stealchalk",
     displayName: "stealing chalk",
@@ -82,6 +82,7 @@ const staticCrimesData = [
       { type: "chalk", quantity: 1 },
       { type: "money", quantity: 4 },
     ],
+    criminals: 0,
     durationMS: 2000,
   },
   { uid: "jaywalk", displayName: "jaywalking", description: "walking, but where you shouldn't", durationMS: 2000, req: "money", net: "criminal" },
@@ -118,6 +119,54 @@ const staticCrimesData = [
   { uid: "", displayName: "", description: "", durationMS: 10000 },
   { uid: "", displayName: "", description: "", durationMS: 10000 },
 ];
+
+// this cleans up the data so other objects can assume it's correct
+function staticCrimeDataClean() {
+  for (let index = 0; index < staticCrimesData.length; index++) {
+    const element = staticCrimesData[index];
+    // fix name if necessary
+    if (!element.displayName) element.displayName = element.uid;
+    if (!element.description) element.description = "";
+    // ten seconds is default time
+    if (!element.durationMS) element.durationMS = 10000;
+    // default num of criminals. can set to 0 to mean none needed
+    if (!element.criminals && element.criminals != 0) element.criminals = 1;
+    if (!element.req) {
+      element.req = null;
+    } else {
+      element.req = fixYields(element.req);
+    }
+    if (!element.net) {
+      element.net = null;
+    } else {
+      element.net = fixYields(element.net);
+    }
+
+    function fixYields(yield) {
+      let fixedYield = [];
+      // normalise into array
+      let localYield = common.normaliseData(yield);
+      // cycle thru array
+      for (let index = 0; index < localYield.length; index++) {
+        const element = localYield[index];
+        fixedYield[index] = {};
+        // check if element is a single string and clean it up
+        // or is proper object
+        if (typeof element == "string") {
+          fixedYield[index].type = element;
+          fixedYield[index].quantity = 1;
+        } else if (element.type && element.quantity) {
+          // or if legit yield object
+          fixedYield[index].type = element.type;
+          fixedYield[index].quantity = element.quantity;
+        } else {
+          fixedYield[index] = -1;
+        }
+      }
+      return fixedYield;
+    }
+  }
+}
 
 const modularContentData = [
   {
