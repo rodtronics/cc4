@@ -389,10 +389,10 @@ class moduleClass {
     const criminalsAvailable = player.basicCriminals.criminalsAvailable;
     if (criminalsAvailable < criminalsNeeded) return "not enough people";
     // if no reqs then all god
-    if (!this.req) return "met";
-    for (let index = 0; index < this.req.length; index++) {
-      const reqType = this.req[index].type;
-      const reqQuantity = this.req[index].quantity;
+    if (!this.dataSet.req) return "met";
+    for (let index = 0; index < this.dataSet.req.length; index++) {
+      const reqType = this.dataSet.req[index].type;
+      const reqQuantity = this.dataSet.req[index].quantity;
       const checkedInventory = inventory.checkInventory(reqType);
       if (checkedInventory < reqQuantity) return `not enough ${reqType}`;
     }
@@ -413,10 +413,7 @@ class moduleClass {
       return "reqs not met. pass true in the argument to force";
     }
     if (this.dataSet.req) {
-      console.log("there are reqs");
-
       const passedData = common.normaliseData(this.dataSet.req);
-      console.log(passedData);
       inventory.subInventoryByArray(passedData);
     }
   }
@@ -456,11 +453,11 @@ class moduleClass {
   }
 
   calcProgress() {
-    return this.data.progress / this.data.durationMS;
+    return this.data.progress / this.dataSet.durationMS;
   }
 
   msLeft(format) {
-    const msLeft = this.data.durationMS - this.data.progress;
+    const msLeft = this.dataSet.durationMS - this.data.progress;
     if (format == true) {
       return common.formatTime(msLeft);
     }
@@ -510,7 +507,7 @@ class moduleClass {
 
   running() {
     this.data.progress += global.refreshRate;
-    if (this.data.progress > this.data.durationMS) {
+    if (this.data.progress > this.dataSet.durationMS) {
       this.completed();
     }
   }
@@ -519,8 +516,8 @@ class moduleClass {
     // reset progress
     this.data.progress = 0;
     // give net
-    if (this.net) {
-      inventory.addInventoryByArray(this.net);
+    if (this.dataSet.net) {
+      inventory.addInventoryByArray(this.dataSet.net);
       player.updateMoney();
     }
     // check autostate for auto restart

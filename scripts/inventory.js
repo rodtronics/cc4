@@ -64,7 +64,6 @@ class inventoryClass {
     this.refreshDisplay();
   }
   subInventoryByArray(array) {
-    console.log(array);
     for (let index = 0; index < array.length; index++) {
       const element = array[index];
       const answer = this.subInventory(element.type, element.quantity);

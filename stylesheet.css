@@ -16,7 +16,9 @@
   --rainbow-E_bright: #00ccff;
   --dark: rgb(40, 40, 40);
   --dark: rgb(66, 66, 66);
-  --darkAlpha: rgba(66, 66, 66, 0.5);
+  --dark: rgb(55, 55, 55);
+
+  --darkAlpha: rgba(55, 55, 55, 0.5);
 
   font-family: "Michroma", sans-serif;
   font-family: "Bebas Neue", sans-serif;
@@ -168,7 +170,10 @@ reqNet {
   flex-wrap: wrap;
   flex: 2;
   justify-content: flex-start;
+  justify-content: space-evenly;
+
   align-items: flex-start;
+
   background: repeating-linear-gradient(-45deg, var(--color-A) 0px, var(--color-A) 20px, var(--dark) 20px, var(--dark) 40px);
   background: repeating-linear-gradient(
     -45deg,
