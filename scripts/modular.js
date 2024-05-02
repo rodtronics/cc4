@@ -66,18 +66,25 @@ const moduleBuilder = {
   },
   createProgressBarDiv() {
     const newDiv = this.createDiv("elementGroupProgressBar");
+    newDiv.classList.add("elementGroupMaxHeight40px");
     return newDiv;
   },
   createProgressTextDiv() {
     const newDiv = this.createDiv("elementGroupProgressText");
+    newDiv.classList.add("elementGroupMaxHeight40px");
+
     return newDiv;
   },
   createCheckButtonDiv() {
     const newDiv = this.createDiv(["elementGroupCheckButton", "elementGroupButton"]);
+    newDiv.classList.add("elementGroupMaxHeight40px");
+
     return newDiv;
   },
   createDoButtonDiv() {
     const newDiv = this.createDiv(["elementGroupDoButton", "elementGroupButton"]);
+    newDiv.classList.add("elementGroupMaxHeight40px");
+
     return newDiv;
   },
 
@@ -116,6 +123,8 @@ const moduleBuilder = {
       // const netHTML = this.createReqNetHTML(newModule, "net");
       // newModule.elements.subHeaderReq.innerHTML = reqHTML;
       // newModule.elements.subHeaderNet.innerHTML = netHTML;
+
+      newModule.elements.header.setAttribute("data-virginState", "true");
 
       newModule.elements.checkButton.innerHTML = "<notoSymbol3>⮔</notoSymbol3>";
       newModule.elements.checkButton.setAttribute("data-checkState", "off");
@@ -485,6 +494,8 @@ class moduleClass {
         this.run();
         break;
       case "virgin":
+        this.elements.header.setAttribute("data-virginState", "false");
+
       case "completed":
         if (criminalReqs != "met") {
           this.elements.progressText.innerText = "not enough people";

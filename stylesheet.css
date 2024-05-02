@@ -9,11 +9,21 @@
   --rainbow-C: #ffd700;
   --rainbow-D: #00bc3e;
   --rainbow-E: #006cff;
+  --rainbow-A_Alpha: rgb(185, 28, 0, 0.5);
+  --rainbow-B_Alpha: rgb(255, 97, 0, 0.5);
+  --rainbow-C_Alpha: rgb(255, 215, 0, 0.5);
+  --rainbow-D_Alpha: rgb(0, 188, 62, 0.5);
+  --rainbow-E_Alpha: rgb(0, 108, 255, 0.5);
   --rainbow-A_bright: #d62404;
   --rainbow-B_bright: #ff794d;
   --rainbow-C_bright: #fffb00;
   --rainbow-D_bright: #00ff6a;
   --rainbow-E_bright: #00ccff;
+  --rainbow-A_bright_Alpha: rgba(214, 36, 4, 0.5);
+  --rainbow-B_bright_Alpha: rgba(255, 121, 77, 0.5);
+  --rainbow-C_bright_Alpha: rgba(255, 251, 0, 0.5);
+  --rainbow-D_bright_Alpha: rgba(0, 255, 106, 0.5);
+  --rainbow-E_bright_Alpha: rgba(0, 204, 255, 0.5);
   --dark: rgb(40, 40, 40);
   --dark: rgb(66, 66, 66);
   --dark: rgb(55, 55, 55);
@@ -46,10 +56,10 @@ notoSymbol2 {
 
 notoSymbol3 {
   font-family: "Noto Sans Symbols 2", sans-serif;
-  font-size: 1.5em;
+  font-size: 2em;
   /* line-height: 1em; */
   position: relative;
-  top: 3px;
+  /* top: 3px; */
 }
 
 minusLineHeight {
@@ -254,12 +264,31 @@ reqNet {
   margin-bottom: 4px;
   /* font-family: "Source Code Pro", monospace; */
   /* font-family: "d-dinregular"; */
+  transition: background 1s, color 1s;
+}
+
+.elementGroupMaxHeight40px {
+  max-height: 40px;
+}
+
+.elementGroupHeader[data-virginState="true"] {
+  /* background: var(--rainbow-D); */
+  /* border-style: solid;
+  border-width: 2px;
+  border-color: var(--rainbow-E_brightAlpha); */
+  background: var(--rainbow-E_Alpha);
+  /* border-radius: 0px 0px 10px 10px; */
 }
 
 .elementGroupHeader:hover {
   background: rgba(0, 68, 255, 1);
   /* background: linear-gradient(-20deg, rgba(0, 68, 255, 1) 0%, rgb(0, 166, 255) 100%); */
   color: white;
+  transition: background 0.2s, color 0.2s;
+}
+.elementGroupHeader[data-virginState="false"] {
+  background: none;
+  transition: background 2s;
 }
 
 .elementGroupSubHeader {
