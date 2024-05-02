@@ -123,6 +123,15 @@ const common = {
       return -1;
     }
   },
+  getIndexByUID(array, uid) {
+    if (!Array.isArray(array) || !uid) return null;
+    for (let index = 0; index < array.length; index++) {
+      if (array[index].uid === uid) {
+        return index;
+      }
+      return -1;
+    }
+  },
 };
 
 /*
@@ -152,10 +161,11 @@ for (let index = 0; index < moduleArray.length; index++) {
 const tabDiv = document.getElementById("tabDivID");
 makePrimaryTabs(tabDiv);
 setActiveTab(0);
+recalcCrimeVisibility();
 
-for (let index = 0; index < moduleArray.length; index++) {
-  global.bodyDiv.appendChild(moduleArray[index].elements.container);
-}
+// for (let index = 0; index < moduleArray.length; index++) {
+//   global.bodyDiv.appendChild(moduleArray[index].elements.container);
+// }
 
 // game loop
 function animationGameLoop() {

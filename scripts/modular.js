@@ -224,8 +224,9 @@ class moduleClass {
     this.elements = {};
     this.data = {};
     this.data.progress = 0;
-    this.visible = false;
-    this.display = true;
+    this.data.visible = false;
+    this.data.completedOnce = false;
+    // this.display = true;
     this.req = [{}];
     this.net = [{}];
     this.intervalTimer = null;
@@ -239,6 +240,7 @@ class moduleClass {
   setEventListeners() {
     this.elements.checkButton.addEventListener("click", () => this.toggleAutoState());
     this.elements.doButton.addEventListener("click", () => this.startStop());
+    this.elements.header.addEventListener("click", () => modal.showModal(this.dataSet.displayName, this.dataSet.description));
   }
 
   // run after initialisation, builds reqs and nets as normalised
@@ -513,7 +515,10 @@ class moduleClass {
   }
 
   completed() {
-    // reset progress
+    if (this.data.completedOnce == false) {
+      this.data.completedOnce = true;
+      recalcCrimeVisibility();
+    } // reset progress
     this.data.progress = 0;
     // give net
     if (this.dataSet.net) {
@@ -548,4 +553,39 @@ class moduleClass {
     player.returnCriminal(this.dataSet.criminals);
     player.updateMoney();
   }
+}
+
+// this function cycles through each crime module
+// and if its locked, check if its prereq is unlocked
+// and will unlock (made visible)
+function recalcCrimeVisibility() {
+  // cycle through array
+  for (let index = 0; index < moduleArray.length; index++) {
+    const element = moduleArray[index];
+    // continue if already visible
+    if (element.data.visible == true) continue;
+    const unlockuid = element.dataSet.unlockuid;
+    // if no unlock requirements then unlock
+    if (!unlockuid) {
+      element.data.visible = true;
+      console.log(`${element.uid} auto unlocked due to no prereq crimes`);
+      continue;
+    }
+
+    const moduleArrayIndex = common.getIndexByUID(moduleArray, unlockuid);
+    if (moduleArrayIndex == -1) {
+      console.log("can't find index of crime prereq");
+      continue;
+    }
+    // if here then must have req and still be locked
+    // check target (the prereq crime) completed once
+    // and if so, unlock
+    if (moduleArray[moduleArrayIndex].data.completedOnce == true) {
+      // and if the target module been completed, at least once, then
+      // this element goes visible
+      element.data.visible = true;
+      console.log(moduleArray[moduleArrayIndex].uid + " unlocked due to prereq crime met");
+    }
+  }
+  setActiveTab();
 }

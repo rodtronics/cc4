@@ -25,9 +25,11 @@ function makePrimaryTabs(divToAppendTo) {
 
 let activeTab = 0;
 function setActiveTab(tabIndex) {
+  tabIndex = tabIndex == undefined ? activeTab : tabIndex;
   activeTab = tabIndex;
   // turn off all tabs
   for (let index = 0; index < primaryTabs.length; index++) {
+    // console.log(primaryTabs[index].element);
     primaryTabs[index].element.setAttribute("data-tabState", "inactive");
   }
   // turn on the right one
@@ -36,10 +38,11 @@ function setActiveTab(tabIndex) {
 
   clearElements();
   // then display the relevant icons
-  global.bodyDiv.appendChild(inventory.elements.container);
+  // global.bodyDiv.appendChild(inventory.elements.container);
   inventory.refreshDisplay();
   for (let index = 0; index < moduleArray.length; index++) {
-    if (tabIndex == 0 && moduleArray[index].type == "staticCrime") {
+    console.log(`${moduleArray[index].uid}     ${moduleArray[index].data.visible}`);
+    if (tabIndex == 0 && moduleArray[index].type == "staticCrime" && moduleArray[index].data.visible == true) {
       global.bodyDiv.appendChild(moduleArray[index].elements.container);
     } else if (tabIndex == 1) {
       global.bodyDiv.appendChild(inventory.elements.container);

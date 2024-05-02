@@ -110,6 +110,7 @@ class inventoryClass {
     this.inventory[index].subElements.itemContainer = moduleBuilder.createDiv();
     this.inventory[index].subElements.itemContainer.classList.add("inventoryItemContainer");
     const itemContainer = this.inventory[index].subElements.itemContainer;
+    itemContainer.addEventListener("click", () => modal.showModal(displayName, inventoryData[index].description));
     this.inventory[index].subElements.header = moduleBuilder.createDiv();
     this.inventory[index].subElements.header.classList.add("inventoryItemHeader");
     this.inventory[index].subElements.header.innerText = displayName;

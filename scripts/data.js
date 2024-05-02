@@ -85,7 +85,15 @@ let staticCrimesData = [
     criminals: 0,
     durationMS: 2000,
   },
-  { uid: "jaywalk", displayName: "jaywalking", description: "walking, but where you shouldn't", durationMS: 2000, req: "money", net: "criminal" },
+  {
+    uid: "jaywalk",
+    displayName: "jaywalking",
+    description: "walking, but where you shouldn't",
+    durationMS: 2000,
+    req: "money",
+    net: "criminal",
+    unlockuid: "stealchalk",
+  },
   {
     uid: "fashion",
     displayName: "fashion crime",
@@ -168,6 +176,7 @@ function staticCrimeDataClean() {
   }
 }
 
+// deprecated
 const modularContentData = [
   {
     // this one is a bit of a prototype, showing all properties even if not used in this one
@@ -207,6 +216,7 @@ const modularContentData = [
   },
 ];
 
+// deprecated
 const robberyData = [
   {
     category: 1,
