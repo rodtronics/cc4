@@ -41,7 +41,7 @@ function setActiveTab(tabIndex) {
   // global.bodyDiv.appendChild(inventory.elements.container);
   inventory.refreshDisplay();
   for (let index = 0; index < moduleArray.length; index++) {
-    console.log(`${moduleArray[index].uid}     ${moduleArray[index].data.visible}`);
+    // console.log(`${moduleArray[index].uid}     ${moduleArray[index].data.visible}`);
     if (tabIndex == 0 && moduleArray[index].type == "staticCrime" && moduleArray[index].data.visible == true) {
       global.bodyDiv.appendChild(moduleArray[index].elements.container);
     } else if (tabIndex == 1) {

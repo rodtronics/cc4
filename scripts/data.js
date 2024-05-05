@@ -84,6 +84,7 @@ let staticCrimesData = [
     ],
     criminals: 0,
     durationMS: 2000,
+    onceOff: true,
   },
   {
     uid: "jaywalk",

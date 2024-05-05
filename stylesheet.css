@@ -329,6 +329,14 @@ reqNet {
   font-weight: 400;
 }
 
+.elementGroupHeader[data-finishState="true"] {
+  background: var(--rainbow-A_bright_Alpha);
+}
+
+.elementGroupProgressText[data-finishState="true"]:hover {
+  background: var(--rainbow-D_bright_Alpha);
+}
+
 .relativeAndShift {
   position: relative;
   /* top: 20px; */

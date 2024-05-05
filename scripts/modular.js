@@ -114,7 +114,10 @@ const moduleBuilder = {
       newModule.elements.subHeaderReq = this.createSubHeaderDiv();
       newModule.elements.subHeaderNet = this.createSubHeaderDiv();
       newModule.elements.progressBar = this.createProgressBarDiv();
-      newModule.elements.checkButton = this.createCheckButtonDiv();
+      if (dataSet.onceOff != true) {
+        newModule.elements.checkButton = this.createCheckButtonDiv();
+      }
+
       newModule.elements.doButton = this.createDoButtonDiv();
       newModule.elements.progressText = this.createProgressTextDiv();
 
@@ -126,8 +129,10 @@ const moduleBuilder = {
 
       newModule.elements.header.setAttribute("data-virginState", "true");
 
-      newModule.elements.checkButton.innerHTML = "<notoSymbol3>⮔</notoSymbol3>";
-      newModule.elements.checkButton.setAttribute("data-checkState", "off");
+      if (dataSet.onceOff != true) {
+        newModule.elements.checkButton.innerHTML = "<notoSymbol3>⮔</notoSymbol3>";
+        newModule.elements.checkButton.setAttribute("data-checkState", "off");
+      }
 
       newModule.elements.doButton.innerHTML = "<notoSymbol3>🢅</notoSymbol3>";
 
@@ -144,8 +149,14 @@ const moduleBuilder = {
       newModule.elements.subHeaderNet.style.gridColumn = "3 / span 2";
       newModule.elements.progressBar.style.gridRow = "2";
       newModule.elements.progressBar.style.gridColumn = "2 / span 2";
-      newModule.elements.checkButton.style.gridRow = "2";
-      newModule.elements.checkButton.style.gridColumn = "1";
+      if (dataSet.onceOff != true) {
+        newModule.elements.checkButton.style.gridRow = "2";
+        newModule.elements.checkButton.style.gridColumn = "1";
+      } else {
+        newModule.elements.progressBar.style.gridRow = "2";
+        newModule.elements.progressBar.style.gridColumn = "1 / span 3";
+      }
+
       newModule.elements.doButton.style.gridRow = "2";
       newModule.elements.doButton.style.gridColumn = "4";
       newModule.elements.progressText.style.gridRow = "3";
@@ -156,7 +167,10 @@ const moduleBuilder = {
       newModule.elements.container.appendChild(newModule.elements.subHeaderReq);
       newModule.elements.container.appendChild(newModule.elements.subHeaderNet);
       newModule.elements.container.appendChild(newModule.elements.progressBar);
-      newModule.elements.container.appendChild(newModule.elements.checkButton);
+      if (dataSet.onceOff != true) {
+        newModule.elements.container.appendChild(newModule.elements.checkButton);
+      }
+
       newModule.elements.container.appendChild(newModule.elements.doButton);
       newModule.elements.container.appendChild(newModule.elements.progressText);
 
@@ -247,7 +261,10 @@ class moduleClass {
   }
 
   setEventListeners() {
-    this.elements.checkButton.addEventListener("click", () => this.toggleAutoState());
+    if (this.dataSet.onceOff != true) {
+      this.elements.checkButton.addEventListener("click", () => this.toggleAutoState());
+    }
+
     this.elements.doButton.addEventListener("click", () => this.startStop());
     this.elements.header.addEventListener("click", () => modal.showModal(this.dataSet.displayName, this.dataSet.description));
   }
@@ -476,6 +493,7 @@ class moduleClass {
   }
 
   startStop() {
+    console.log(this.state);
     const criminalReqs = this.checkCriminalReqs();
 
     switch (this.state) {
@@ -502,6 +520,15 @@ class moduleClass {
           return;
         }
         this.run();
+        break;
+      case "finished":
+        this.state = "over";
+        this.over();
+        console.log("finished case");
+        break;
+      case "over":
+        // this.stop("it's over mate");
+        // this.state = "over";
         break;
     }
   }
@@ -530,12 +557,14 @@ class moduleClass {
       this.data.completedOnce = true;
       recalcCrimeVisibility();
     } // reset progress
+    if (this.dataSet.onceOff == true) {
+      this.state = "finished";
+      this.finished();
+      return;
+    }
     this.data.progress = 0;
     // give net
-    if (this.dataSet.net) {
-      inventory.addInventoryByArray(this.dataSet.net);
-      player.updateMoney();
-    }
+    this.addInventory();
     // check autostate for auto restart
     if (this.autoState == true) {
       player.updateMoney();
@@ -555,6 +584,34 @@ class moduleClass {
     }
   }
 
+  finished() {
+    console.log("finish function");
+    this.stop("complete, click to claim");
+    this.state = "finished";
+    this.elements.doButton.removeEventListener("click", () => this.toggleAutoState());
+    this.elements.container.removeChild(this.elements.doButton);
+    this.elements.progressText.style.gridRow = "2 / span 2";
+    this.elements.header.setAttribute("data-finishState", "true");
+    this.elements.progressText.setAttribute("data-finishState", "true");
+    this.elements.progressText.addEventListener("click", () => this.startStop());
+    this.state = "finished";
+  }
+
+  over() {
+    console.log("over function");
+    this.elements.progressText.removeEventListener("click", () => this.startStop());
+    this.addInventory();
+    this.clearAndSetText("sweet");
+    this.state = "over";
+  }
+
+  addInventory() {
+    if (this.dataSet.net) {
+      inventory.addInventoryByArray(this.dataSet.net);
+      player.updateMoney();
+    }
+  }
+
   stop(innerText) {
     innerText = innerText ? innerText : "complete";
     clearInterval(this.intervalTimer);
@@ -562,6 +619,13 @@ class moduleClass {
     this.redraw("clear");
     this.elements.progressText.innerText = innerText;
     player.returnCriminal(this.dataSet.criminals);
+    player.updateMoney();
+  }
+  clearAndSetText(innerText) {
+    clearInterval(this.intervalTimer);
+
+    this.redraw("clear");
+    this.elements.progressText.innerText = innerText;
     player.updateMoney();
   }
 }
@@ -579,7 +643,7 @@ function recalcCrimeVisibility() {
     // if no unlock requirements then unlock
     if (!unlockuid) {
       element.data.visible = true;
-      console.log(`${element.uid} auto unlocked due to no prereq crimes`);
+      // console.log(`${element.uid} auto unlocked due to no prereq crimes`);
       continue;
     }
 
