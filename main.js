@@ -148,6 +148,8 @@ let player = new playerDataClass();
 let inventory = new inventoryClass();
 inventory.refreshDisplay();
 
+const inventoryManager = new inventoryManagerClass();
+
 // clean up data
 staticCrimeDataClean();
 

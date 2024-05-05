@@ -1,5 +1,15 @@
+const inventoryNameArray = ["inventory", "locations", "skills"];
+let inventoryArray = [];
+class inventoryManagerClass {
+  constructor(typeOfInventory) {
+    for (let index = 0; index < inventoryNameArray.length; index++) {
+      inventoryArray[index] = new inventoryClass(inventoryNameArray[index]);
+    }
+  }
+}
+
 class inventoryClass {
-  constructor() {
+  constructor(typeOfInventory) {
     this.elements = {};
     this.inventory = [];
     for (let index = 0; index < inventoryData.length; index++) {
@@ -9,7 +19,7 @@ class inventoryClass {
       this.inventory[index].quantityCumulative = 0;
       this.inventory[index].subElements = {};
     }
-    this.buildElements();
+    this.buildElements(typeOfInventory);
   }
   checkInventory(type) {
     const index = this.getIndexByType(type);
@@ -90,11 +100,11 @@ class inventoryClass {
     }
     return -1;
   }
-  buildElements() {
+  buildElements(typeOfInventory) {
     // make container and header
     this.elements.container = moduleBuilder.createContainterDiv();
     this.elements.container.classList.add("inventoryContainer");
-    this.elements.header = moduleBuilder.createHeaderDiv("inventory");
+    this.elements.header = moduleBuilder.createHeaderDiv(typeOfInventory);
     this.elements.header.classList.add("inventoryHeader");
     this.elements.subContainer = moduleBuilder.createDiv("inventorySubContainer");
 
