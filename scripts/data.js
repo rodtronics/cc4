@@ -257,7 +257,7 @@ const robberyData = [
  * @saleRisk if non zero then means chance of losing it without making money
  */
 const inventoryData = [
-  { type: "money", displayName: "money" },
+  { type: "money", displayName: "money", inventoryType: "inventory" },
   { type: "candy", displayName: "candy", description: "a sad little confection, it tastes like regret", value: 0 },
   { type: "sadness", displayName: "sadness", description: "you feel a bit sad about the things you have done", saleValue: 0 },
   { type: "tired", displayName: "tired", description: "", saleValue: 0 },
