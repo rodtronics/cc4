@@ -281,6 +281,16 @@ reqNet {
   border-color: var(--rainbow-E_brightAlpha); */
   background: var(--rainbow-E_Alpha);
   /* border-radius: 0px 0px 10px 10px; */
+  transition: background 1s, color 1s;
+}
+.elementGroupHeader[data-virginState="true"][data-onceOffState="true"] {
+  /* background: var(--rainbow-D); */
+  /* border-style: solid;
+  border-width: 2px;
+  border-color: var(--rainbow-E_brightAlpha); */
+  background: var(--rainbow-D_Alpha);
+  /* border-radius: 0px 0px 10px 10px; */
+  transition: background 1s, color 1s;
 }
 
 .elementGroupHeader:hover {

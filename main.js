@@ -1,11 +1,11 @@
 // crime committer 4
 
 // set the version
-const ccVersion = 0.4;
+const ccVersion = 0.66;
 // const notoSymbol = "<notoSymbol>🢅</notoSymbol>";
 const notoSymbol = "<notoSymbol>🢆</notoSymbol>";
 
-const ccCode = "dank.alpha";
+const ccCode = "dank.beta";
 //and apply it
 document.getElementById("versionDivID").innerHTML = `v${ccVersion}${notoSymbol} ${ccCode}`;
 

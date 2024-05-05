@@ -132,6 +132,8 @@ const moduleBuilder = {
       if (dataSet.onceOff != true) {
         newModule.elements.checkButton.innerHTML = "<notoSymbol3>⮔</notoSymbol3>";
         newModule.elements.checkButton.setAttribute("data-checkState", "off");
+      } else {
+        newModule.elements.header.setAttribute("data-onceOffState", "true");
       }
 
       newModule.elements.doButton.innerHTML = "<notoSymbol3>🢅</notoSymbol3>";
@@ -512,7 +514,7 @@ class moduleClass {
         this.run();
         break;
       case "virgin":
-        this.elements.header.setAttribute("data-virginState", "false");
+      // this.elements.header.setAttribute("data-virginState", "false");
 
       case "completed":
         if (criminalReqs != "met") {
@@ -556,10 +558,9 @@ class moduleClass {
 
   completed() {
     if (this.data.completedOnce == false) {
-      this.elements.header.setAttribute("data-virginState", "false");
-
       this.data.completedOnce = true;
       recalcCrimeVisibility();
+      this.elements.header.setAttribute("data-virginState", "false");
     } // reset progress
     if (this.dataSet.onceOff == true) {
       this.state = "finished";
@@ -578,7 +579,7 @@ class moduleClass {
       console.log(checkReqs);
       if (checkReqs != "met") {
         this.toggleAutoState();
-        this.stop("reqs not met for restart");
+        this.stop(`${checkReqs} for restart`);
         return;
       }
       this.removeReqs();
