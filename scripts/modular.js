@@ -493,7 +493,7 @@ class moduleClass {
   }
 
   startStop() {
-    console.log(this.state);
+    // console.log(this.state);
     const criminalReqs = this.checkCriminalReqs();
 
     switch (this.state) {
@@ -524,7 +524,7 @@ class moduleClass {
       case "finished":
         this.state = "over";
         this.over();
-        console.log("finished case");
+        // console.log("finished case");
         break;
       case "over":
         // this.stop("it's over mate");
@@ -537,6 +537,8 @@ class moduleClass {
     const reqCheck = this.checkReqs();
     if (reqCheck != "met") {
       this.elements.progressText.innerText = "reqs not met";
+      this.elements.progressText.innerText = reqCheck;
+
       return;
     }
     this.removeReqs();
@@ -554,6 +556,8 @@ class moduleClass {
 
   completed() {
     if (this.data.completedOnce == false) {
+      this.elements.header.setAttribute("data-virginState", "false");
+
       this.data.completedOnce = true;
       recalcCrimeVisibility();
     } // reset progress
@@ -571,6 +575,7 @@ class moduleClass {
 
       // check reqs again
       const checkReqs = this.checkReqs();
+      console.log(checkReqs);
       if (checkReqs != "met") {
         this.toggleAutoState();
         this.stop("reqs not met for restart");
@@ -585,7 +590,7 @@ class moduleClass {
   }
 
   finished() {
-    console.log("finish function");
+    // console.log("finish function");
     this.stop("complete, click to claim");
     this.state = "finished";
     this.elements.doButton.removeEventListener("click", () => this.toggleAutoState());
@@ -598,7 +603,7 @@ class moduleClass {
   }
 
   over() {
-    console.log("over function");
+    // console.log("over function");
     this.elements.progressText.removeEventListener("click", () => this.startStop());
     this.addInventory();
     this.clearAndSetText("sweet");
@@ -659,7 +664,7 @@ function recalcCrimeVisibility() {
       // and if the target module been completed, at least once, then
       // this element goes visible
       element.data.visible = true;
-      console.log(moduleArray[moduleArrayIndex].uid + " unlocked due to prereq crime met");
+      // console.log(moduleArray[moduleArrayIndex].uid + " unlocked due to prereq crime met");
     }
   }
   setActiveTab();

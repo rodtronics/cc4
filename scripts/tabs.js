@@ -45,10 +45,18 @@ function setActiveTab(tabIndex) {
     if (tabIndex == 0 && moduleArray[index].type == "staticCrime" && moduleArray[index].data.visible == true) {
       global.bodyDiv.appendChild(moduleArray[index].elements.container);
     } else if (tabIndex == 1) {
-      global.bodyDiv.appendChild(inventory.elements.container);
+      for (let index = 0; index < inventoryNameArray.length; index++) {
+        const element = inventory.containerElements[index];
+        global.bodyDiv.appendChild(element.container);
+      }
+      // global.bodyDiv.appendChild(inventory.elements.container);
       inventory.refreshDisplay();
     }
   }
+}
+
+function refreshIventory() {
+  const subElementArray = inventory.inventory;
 }
 
 function clearElements() {

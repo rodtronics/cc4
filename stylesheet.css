@@ -166,8 +166,11 @@ reqNet {
 }
 
 .filterDiv {
-  backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px) saturate(200%);
+  /* backdrop-filter: blur(2px); */
+
   mix-blend-mode: screen;
+  mix-blend-mode: difference;
   opacity: 0.3;
   z-index: 10;
   pointer-events: none;
