@@ -148,8 +148,6 @@ let player = new playerDataClass();
 let inventory = new inventoryClass();
 inventory.refreshDisplay();
 
-let masterInventory = new masterInventoryClass();
-
 // clean up data
 staticCrimeDataClean();
 

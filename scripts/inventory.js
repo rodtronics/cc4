@@ -1,15 +1,22 @@
+const inventoryNameArray = ["inventory", "locations", "skills"];
+
 class inventoryClass {
   constructor(typeOfInventory) {
-    this.elements = {};
+    this.containerElements = [];
+
     this.inventory = [];
     for (let index = 0; index < inventoryData.length; index++) {
       this.inventory[index] = {};
       this.inventory[index].type = inventoryData[index].type;
+      this.inventory[index].inventoryType = inventoryData[index].inventoryType;
       this.inventory[index].quantity = 0;
       this.inventory[index].quantityCumulative = 0;
       this.inventory[index].subElements = {};
     }
-    this.buildElements(typeOfInventory);
+    for (let index = 0; index < inventoryNameArray.length; index++) {
+      const element = inventoryNameArray[index];
+      this.buildElements(index);
+    }
   }
   checkInventory(type) {
     const index = this.getIndexByType(type);
@@ -71,7 +78,7 @@ class inventoryClass {
   }
   subInventory(type, quantity) {
     if (type == "money") {
-      player.addMoney(quantity);
+      player.subMoney(quantity);
     }
     const index = this.getIndexByType(type);
     if (index == null || index == -1) return index;
@@ -90,16 +97,22 @@ class inventoryClass {
     }
     return -1;
   }
-  buildElements(typeOfInventory) {
-    // make container and header
-    this.elements.container = moduleBuilder.createContainterDiv();
-    this.elements.container.classList.add("inventoryContainer");
-    this.elements.header = moduleBuilder.createHeaderDiv(typeOfInventory);
-    this.elements.header.classList.add("inventoryHeader");
-    this.elements.subContainer = moduleBuilder.createDiv("inventorySubContainer");
+  buildElements(index) {
+    const inventoryTypeName = inventoryNameArray[index];
+    this.containerElements[index] = {};
+    let localElementObject = this.containerElements[index];
 
-    this.elements.container.appendChild(this.elements.header);
-    this.elements.container.appendChild(this.elements.subContainer);
+    // console.log(localElementObject);
+    // make container and header
+
+    localElementObject.container = moduleBuilder.createContainterDiv();
+    localElementObject.container.classList.add("inventoryContainer");
+    localElementObject.header = moduleBuilder.createHeaderDiv(inventoryTypeName);
+    localElementObject.header.classList.add("inventoryHeader");
+    localElementObject.subContainer = moduleBuilder.createDiv("inventorySubContainer");
+
+    localElementObject.container.appendChild(localElementObject.header);
+    localElementObject.container.appendChild(localElementObject.subContainer);
 
     for (let index = 0; index < inventoryData.length; index++) {
       this.buildSubElement(index);
@@ -122,13 +135,31 @@ class inventoryClass {
 
   refreshDisplay() {
     // clear subitems
-    while (this.elements.subContainer.firstChild) {
-      this.elements.subContainer.removeChild(this.elements.subContainer.lastChild);
-      // add only items with quantity
+    // cycle through inventory types
+    for (let index = 0; index < this.containerElements.length; index++) {
+      const element = this.containerElements[index];
+      // this while loop runs while subContainer has a child
+      // and then removes the last child. eventually removing all
+      while (element.subContainer.firstChild) {
+        element.subContainer.removeChild(element.subContainer.lastChild);
+      }
     }
+    let inventoryModuleContainer = {};
     for (let index = 0; index < inventoryData.length; index++) {
       if (this.inventory[index].quantity > 0) {
-        this.elements.subContainer.appendChild(this.inventory[index].subElements.itemContainer);
+        // console.log(this.inventory[index].inventoryType);
+        switch (this.inventory[index].inventoryType) {
+          case "locations":
+            inventoryModuleContainer = this.containerElements[1];
+            break;
+          case "skills":
+            inventoryModuleContainer = this.containerElements[2];
+            break;
+          default:
+            inventoryModuleContainer = this.containerElements[0];
+            break;
+        }
+        inventoryModuleContainer.subContainer.appendChild(this.inventory[index].subElements.itemContainer);
         let quantity = "";
         if (this.inventory[index].type == "money") quantity += "$";
         quantity += this.inventory[index].quantity;
@@ -140,7 +171,6 @@ class inventoryClass {
 
 // there is multiple inventory type windws
 // defined by this array. default is 0
-const inventoryNameArray = ["inventory", "locations", "skills"];
 /*
 ok so trying to have a master inventory,
 the inventory is just one large list,
@@ -164,8 +194,6 @@ not so different after all, same functions called etc,
 
 
 */
-
-
 
 class inventoryClassOld {
   constructor(typeOfInventory) {
@@ -288,85 +316,4 @@ class inventoryClassOld {
     itemContainer.appendChild(this.inventory[index].subElements.header);
     itemContainer.appendChild(this.inventory[index].subElements.quantityBox);
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-class masterInventoryClass {
-  constructor() {
-    this.inventoryTypeArray = [];
-    this.inventory = [];
-    for (let index = 0; index < inventoryData.length; index++) {
-      this.inventory[index] = {};
-      this.inventory[index].type = inventoryData[index].type;
-      this.inventory[index].quantity = 0;
-      this.inventory[index].quantityCumulative = 0;
-      this.inventory[index].subElements = {};
-      const inventoryType = inventoryData[index].inventoryType ? inventoryData[index].inventoryType : "inventory";
-      this.inventory[index].inventoryType = inventoryType;
-    }
-    for (let index = 0; index < inventoryNameArray.length; index++) {
-      const element = inventoryNameArray[index];
-      this.buildBaseElements(this.inventoryTypeArray[index]);
-    }
-  }
-
-  buildBaseElements(inventoryType) {
-    inventoryType = {};
-  }
-
-  checkInventory(type) {
-    return quantity;
-  }
-
-  addInventoryByArray(yieldArray) {}
-
-  addInventoryByType(type, quantity) {}
-
-  subInventoryByArray(yieldArray) {}
-
-  subInventoryByType(type, quantity) {}
-
-  getIndexByType(type) {}
-
-  attachElements(parentElement) {}
-
-  refreshDisplay() {}
 }

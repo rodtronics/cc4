@@ -267,7 +267,7 @@ const inventoryData = [
   { type: "kidcred", displayName: "street cred with children", description: "", saleValue: 0 },
   { type: "shame", displayName: "shame", description: "", saleValue: 0 },
   { type: "criminal", displayName: "criminal", description: "", saleValue: 0 },
-  { type: "vehicle", displayName: "vehicle", description: "", saleValue: 0 },
+  { type: "vehicle", displayName: "vehicle", description: "", saleValue: 0, inventoryType: "locations" },
   { type: "", displayName: "", description: "", saleValue: 0 },
   { type: "", displayName: "", description: "", saleValue: 0 },
   { type: "", displayName: "", description: "", saleValue: 0 },
