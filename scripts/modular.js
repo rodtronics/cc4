@@ -271,6 +271,14 @@ class moduleClass {
     this.elements.header.addEventListener("click", () => modal.showModal(this.dataSet.displayName, this.dataSet.description));
   }
 
+  firstTimeOnScreen() {
+    this.elements.container.setAttribute("data-highlightNew", "true");
+    setTimeout(() => this.resetHighlight(), 50);
+  }
+  resetHighlight() {
+    this.elements.container.setAttribute("data-highlightNew", "false");
+  }
+
   // run after initialisation, builds reqs and nets as normalised
   // array in the object, so later can highlight if meets reqs
   buildReqNet() {
@@ -396,7 +404,13 @@ class moduleClass {
           const quantityHTML = element.quantity > 1 ? `${element.quantity} x ` : "";
           newHTML += `${quantityHTML}${element.type}<br>`;
         } else {
-          newHTML += `$${element.quantity.toLocaleString()}`;
+          if (Array.isArray(element.quantity)) {
+            const num1 = element.quantity[0];
+            const num2 = element.quantity[1];
+            newHTML += `$${num1} - $${num2}`;
+          } else {
+            newHTML += `$${element.quantity.toLocaleString()}`;
+          }
         }
       }
       return newHTML;
@@ -665,6 +679,8 @@ function recalcCrimeVisibility() {
       // and if the target module been completed, at least once, then
       // this element goes visible
       element.data.visible = true;
+      element.firstTimeOnScreen();
+
       // console.log(moduleArray[moduleArrayIndex].uid + " unlocked due to prereq crime met");
     }
   }

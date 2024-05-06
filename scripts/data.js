@@ -58,17 +58,6 @@ const gameMetadata = [
   { type: "location", instances: [] },
 ];
 
-let constructionDataObject = {
-  type: "staticCrime",
-  elements: {
-    container: {
-      gridTemplaceColumns: "repeat (4,1fr)",
-      gridTemplaceRows: "1fr 1fr 1fr 1fr",
-    },
-    header: { gridRow: "1", gridColumn: "1 / span 4" },
-  },
-};
-
 /**
  * required properties
  * uid
@@ -101,6 +90,15 @@ let staticCrimesData = [
     description: "walking, but where you shouldn't",
     durationMS: 5000,
     net: { type: "shame", quantity: [1, 14] },
+  },
+  {
+    uid: "gamble",
+    displayName: "gamble",
+    description: "gambling",
+    durationMS: 5000,
+    req: { type: "money", quantity: 10 },
+    net: { type: "money", quantity: [6, 12] },
+    criminals: 0,
   },
 
   { uid: "chalk", displayName: "chalk vandalism", description: "eco friendly taggin", req: { type: "chalk", quantity: 2 }, criminals: 2, net: "kidcred" },
@@ -176,77 +174,6 @@ function staticCrimeDataClean() {
     }
   }
 }
-
-// deprecated
-const modularContentData = [
-  {
-    // this one is a bit of a prototype, showing all properties even if not used in this one
-    type: "crime",
-    subType: undefined,
-    displayName: "stealing candy from a baby",
-    moduleID: "crime_stealcandy", // must be unique
-    description: "it's just another reminder that even the smallest opponents can leave you feeling like a total loser",
-    durationMS: 30000,
-    yield: [
-      { type: "candy", quantity: [0, 2] }, // if the quantity is an array, it means a range
-      { type: "sadness", quantity: 1 },
-      { type: "money", quantity: [0, 3] },
-    ],
-    cost: 0,
-    requirements: undefined, // undefined means none
-    committersRequired: undefined, // if this is 0 or undefined, it'll just be one
-    coolDownMS: 5000, // how long to wait before can be done again
-    maxCriminals: 0, // if 0 or undefined, it's unlimited
-    automatable: true, // can it just repeat itself over and over
-    riskLost: 0,
-    riskCaught: 0,
-  },
-  {
-    type: "crime",
-    description: "",
-    displayName: "such a long crime",
-    durationMS: 41556952000,
-  },
-  {
-    type: "robbery",
-    description: "",
-    displayName: "minor robberies",
-    durationMS: 41556952000,
-    potentialRobberies: ["bus", "test"],
-    timeRangeToShow: [2000, 3000],
-  },
-];
-
-// deprecated
-const robberyData = [
-  {
-    category: 1,
-    displayName: "bus",
-    description: "you really are going to try and steal change from the bus driver aren't you",
-    timeRangeToStay: [120000, 240000],
-    durationMS: 1000,
-    committersNeeded: 2,
-    yield: [
-      { type: "candy", quantity: [0, 2] }, // if the quantity is an array, it means a range
-      { type: "sadness", quantity: 1 },
-      { type: "money", quantity: 0 },
-    ],
-  },
-  {
-    category: 1,
-    displayName: "florist",
-    description: "you really are going to try and steal change from the bus driver aren't you",
-    yield: [{ type: "money", quantity: [0, 2] }],
-    timeRangeToStay: [120000, 240000],
-    durationMS: 1000,
-    committersNeeded: 2,
-    yield: [
-      { type: "candy", quantity: [0, 2] }, // if the quantity is an array, it means a range
-      { type: "sadness", quantity: 1 },
-      { type: "money", quantity: 0 },
-    ],
-  },
-];
 
 /**
  * this holds the data about inventory

@@ -249,6 +249,9 @@ reqNet {
 
   transition: background 0.3s, box-shadow 1s, backdrop-filter 1s;
 }
+.elementGroupContainer[data-highlightNew="true"] {
+  background: var(--rainbow-A_bright);
+}
 .elementGroupHeader {
   height: 40px;
   border-style: solid;
