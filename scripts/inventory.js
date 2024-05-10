@@ -77,6 +77,11 @@ class inventoryClass {
     }
   }
   subInventory(type, quantity) {
+    const typeIndex = this.getIndexByType(type);
+    if (inventoryData[typeIndex].nonDiminishing == true) {
+      console.log("non dimnise");
+      return;
+    }
     if (type == "money") {
       player.subMoney(quantity);
     }

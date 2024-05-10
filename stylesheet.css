@@ -230,27 +230,16 @@ reqNet {
   width: 250px;
   height: 250px;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: 40px 40px 40px 40px;
   grid-template-rows: 1fr 0.5fr 1fr 1fr;
-  /* box-shadow: 5px 5px rgba(0, 0, 0, 0.5), -5px -5px rgba(255, 255, 255, 0.5); */
-  /* box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.66); */
-  box-shadow: 5px 5px var(--darkAlpha);
-  background: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(5px);
-  transition: background 2s, box-shadow 2s, backdrop-filter 2s;
-
-  /* transition: box-shadow 2s; */
-}
-.elementGroupContainer:hover {
+  .elementGroupContainer:hover {
   background: rgba(255, 255, 255, 1);
-  box-shadow: 7px 7px 2px var(--darkAlpha);
+  box-shadow: 7px 7px 0px var(--darkAlpha);
   backdrop-filter: blur(10px);
-
   transition: background 0.3s, box-shadow 1s, backdrop-filter 1s;
 }
 .elementGroupContainer[data-highlightNew="true"] {
   background: var(--rainbow-A_bright);
+  transform: scale(105%);
 }
 .elementGroupHeader {
   height: 40px;
@@ -270,7 +259,7 @@ reqNet {
   margin-bottom: 4px;
   /* font-family: "Source Code Pro", monospace; */
   /* font-family: "d-dinregular"; */
-  transition: background 1s, color 1s;
+  transition: background 2s, color 6s;
 }
 
 .elementGroupMaxHeight40px {

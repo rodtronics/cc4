@@ -401,8 +401,14 @@ class moduleClass {
         const element = array[index];
 
         if (element.type != "money") {
-          const quantityHTML = element.quantity > 1 ? `${element.quantity} x ` : "";
-          newHTML += `${quantityHTML}${element.type}<br>`;
+          if (Array.isArray(element.quantity)) {
+            const num1 = element.quantity[0];
+            const num2 = element.quantity[1];
+            newHTML += `${num1} - ${num2} x ${element.type}`;
+          } else {
+            const quantityHTML = element.quantity > 1 ? `${element.quantity} x ` : "";
+            newHTML += `${quantityHTML}${element.type}<br>`;
+          }
         } else {
           if (Array.isArray(element.quantity)) {
             const num1 = element.quantity[0];
