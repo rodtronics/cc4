@@ -131,8 +131,8 @@ const common = {
       if (array[index].uid === uid) {
         return index;
       }
-      return -1;
     }
+    return -1;
   },
 };
 

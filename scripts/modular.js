@@ -268,7 +268,7 @@ class moduleClass {
     }
 
     this.elements.doButton.addEventListener("click", () => this.startStop());
-    this.elements.header.addEventListener("click", () => modal.showModal(this.dataSet.displayName, this.dataSet.description));
+    this.elements.header.addEventListener("click", () => modal.showModal(this.dataSet.displayName, this.dataSet.description + reqNetModalTextGen(this.uid)));
   }
 
   firstTimeOnScreen() {

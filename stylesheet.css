@@ -230,11 +230,22 @@ reqNet {
   width: 250px;
   height: 250px;
   display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: 40px 40px 40px 40px;
   grid-template-rows: 1fr 0.5fr 1fr 1fr;
-  .elementGroupContainer:hover {
+
+  box-shadow: 5px 5px var(--darkAlpha);
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(5px);
+  transition: background 2s ease, box-shadow 2s, backdrop-filter 2s, transform 1s;
+
+  /* transition: box-shadow 2s; */
+}
+.elementGroupContainer:hover {
   background: rgba(255, 255, 255, 1);
   box-shadow: 7px 7px 0px var(--darkAlpha);
   backdrop-filter: blur(10px);
+
   transition: background 0.3s, box-shadow 1s, backdrop-filter 1s;
 }
 .elementGroupContainer[data-highlightNew="true"] {
@@ -259,7 +270,7 @@ reqNet {
   margin-bottom: 4px;
   /* font-family: "Source Code Pro", monospace; */
   /* font-family: "d-dinregular"; */
-  transition: background 2s, color 6s;
+  transition: background 1s, color 1s;
 }
 
 .elementGroupMaxHeight40px {
@@ -600,6 +611,7 @@ reqNet {
     ),
     linear-gradient(90deg, rgb(243, 116, 163), rgb(252, 182, 229));
   background-blend-mode: overlay, overlay, overlay, overlay, normal;
+  background: linear-gradient(to bottom, #c6ffdd, #fbd786, #f7797d);
 }
 
 #modalContainerID {
@@ -626,7 +638,7 @@ reqNet {
   padding: 20px;
   /* padding: 10px 20px 20px 20px; */
   grid-row: 1;
-  font-size: 3em;
+  font-size: 2em;
   text-align: right;
   border-style: solid;
   border-width: 0 0 5px 0;
@@ -635,7 +647,7 @@ reqNet {
 }
 
 #modalContentDivID {
-  font-size: 2em;
+  font-size: 1.5em;
   padding: 30px;
   grid-row: 2;
   overflow: scroll;
